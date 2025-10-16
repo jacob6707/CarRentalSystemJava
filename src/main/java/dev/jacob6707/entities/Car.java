@@ -7,12 +7,14 @@ public class Car {
     private String model;
     private Integer year;
     private BigDecimal dailyPrice;
+    private Boolean available;
 
-    public Car(String brand, String model, Integer year, BigDecimal dailyPrice) {
+    public Car(String brand, String model, Integer year, BigDecimal dailyPrice, Boolean available) {
         this.brand = brand;
         this.model = model;
         this.year = year;
         this.dailyPrice = dailyPrice;
+        this.available = available;
     }
 
     public String getBrand() {
@@ -45,5 +47,13 @@ public class Car {
 
     public void setDailyPrice(BigDecimal dailyPrice) {
         this.dailyPrice = dailyPrice;
+    }
+
+    public Boolean getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 }
