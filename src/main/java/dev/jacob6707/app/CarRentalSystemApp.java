@@ -38,13 +38,61 @@ public class CarRentalSystemApp {
         Integer ordinal = 1;
         for (Rental rental : rentals) {
             System.out.println("=====RENTAL #" + ordinal + "=====");
-            System.out.println("Rented by: " + rental.getUser().getFirstName() + " " + rental.getUser().getLastName());
-            System.out.println("Car: " + rental.getCar().getYear() + " " + rental.getCar().getBrand() + " " + rental.getCar().getModel());
-            System.out.println("Rented until: " + rental.getEndDate());
-            System.out.println("Price: EUR" + rental.getPrice());
+            rental.print();
             ordinal++;
         }
+
+        String confirmation = "";
+        do {
+            Integer choice;
+            do {
+                System.out.println("What do you want to do?");
+                System.out.println("1) Print the most expensive rental");
+                System.out.println("2) Print the cheapest rental");
+                System.out.println("3) Search rentals by car brand");
+                System.out.println("4) Search rentals made by a user");
+                System.out.println("5) Check car availability");
+                choice = sc.nextInt();
+                sc.nextLine();
+            } while(choice < 1 || choice > 5);
+
+            switch (choice) {
+                case 1:
+                    Rental mostExpensiveRental = findMostExpensiveRental(rentals);
+                    System.out.println("Most expensive rental:");
+                    mostExpensiveRental.print();
+                    break;
+                case 2:
+                    Rental leastExpensiveRental = findLeastExpensiveRental(rentals);
+                    System.out.println("Least expensive rental:");
+                    leastExpensiveRental.print();
+                    break;
+                case 3:
+                    System.out.print("Enter car brand: ");
+                    String brand = sc.nextLine();
+                    Rental[] rentalsByCarBrand = findRentalsByCarBrand(brand, rentals);
+                    printFoundRentals(rentalsByCarBrand);
+                    break;
+                case 4:
+                    User user = selectUser(sc, users);
+                    Rental[] rentalsByUser = findRentalsByUser(user, rentals);
+                    printFoundRentals(rentalsByUser);
+                    break;
+                case 5:
+                    printCarsList(cars);
+                    break;
+                default:
+                    System.out.println("Invalid choice");
+                    break;
+            }
+
+            System.out.print("Do you want to continue (Y/N)? ");
+            confirmation = sc.nextLine();
+        } while (confirmation.equalsIgnoreCase("y"));
+
+        sc.close();
     }
+
 
     private static User[] generateUsers(Scanner sc, Integer count) {
         User[] users = new User[count];
@@ -122,5 +170,71 @@ public class CarRentalSystemApp {
 
         cars[selection-1].setAvailable(false);
         return cars[selection-1];
+    }
+
+    private static Rental findMostExpensiveRental(Rental[] rentals) {
+        Rental mostExpensiveRental = rentals[0];
+        for(int i = 1; i < NUMBER_OF_RENTALS; i++) {
+            if (rentals[i].getPrice().compareTo(mostExpensiveRental.getPrice()) > 0) {
+                mostExpensiveRental = rentals[i];
+            }
+        }
+        return mostExpensiveRental;
+    }
+
+    private static Rental findLeastExpensiveRental(Rental[] rentals) {
+        Rental leastExpensiveRental = rentals[0];
+        for(int i = 1; i < NUMBER_OF_RENTALS; i++) {
+            if (rentals[i].getPrice().compareTo(leastExpensiveRental.getPrice()) < 0) {
+                leastExpensiveRental = rentals[i];
+            }
+        }
+        return leastExpensiveRental;
+    }
+
+    private static Rental[] findRentalsByCarBrand(String brand, Rental[] rentals) {
+        Rental[] foundRentals = new Rental[NUMBER_OF_RENTALS];
+        Integer i = 0;
+        for (Rental rental : rentals) {
+            if (rental.getCar().getBrand().equalsIgnoreCase(brand)) {
+                foundRentals[i] = rental;
+                i++;
+            }
+        }
+
+        return foundRentals;
+    }
+
+    private static Rental[] findRentalsByUser(User user, Rental[] rentals) {
+        Rental[] foundRentals = new Rental[NUMBER_OF_RENTALS];
+        Integer i = 0;
+        for (Rental rental : rentals) {
+            if (rental.getUser().equals(user)) {
+                foundRentals[i] = rental;
+                i++;
+            }
+        }
+
+        return foundRentals;
+    }
+
+    private static void printFoundRentals(Rental[] foundRentals) {
+        for (int i = 0; i < foundRentals.length; i++) {
+            if (foundRentals[i] != null) {
+                System.out.println("Rental #" + i + ":");
+                foundRentals[i].print();
+            } else if(i == 0) {
+                System.out.println("There are no rentals with the specified car brand.");
+                break;
+            }
+        }
+    }
+
+    private static void printCarsList(Car[] cars) {
+        Integer ordinal = 1;
+        for(Car car : cars) {
+            System.out.println(ordinal + ") " + car.getYear() + " " + car.getBrand() + " " + car.getModel() + "(EUR" + car.getDailyPrice() + "/day): " + (car.getAvailable() ? "AVAILABLE" : "NOT AVAILABLE"));
+            ordinal++;
+        }
     }
 }

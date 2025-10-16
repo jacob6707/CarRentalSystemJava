@@ -53,4 +53,11 @@ public class Rental {
         BigDecimal days = BigDecimal.valueOf(Duration.between(this.startDate, this.endDate).toDays());
         return car.getDailyPrice().multiply(days);
     }
+
+    public void print() {
+        System.out.println("Rented by: " + this.getUser().getFirstName() + " " + this.getUser().getLastName());
+        System.out.println("Car: " + this.getCar().getYear() + " " + this.getCar().getBrand() + " " + this.getCar().getModel());
+        System.out.println("Rented until: " + this.getEndDate());
+        System.out.println("Price: EUR" + this.getPrice());
+    }
 }
