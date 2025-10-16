@@ -60,4 +60,62 @@ public class Rental {
         System.out.println("Rented until: " + this.getEndDate());
         System.out.println("Price: EUR" + this.getPrice());
     }
+
+    public static Rental findMostExpensiveRental(Rental[] rentals) {
+        Rental mostExpensiveRental = rentals[0];
+        for(int i = 1; i < rentals.length; i++) {
+            if (rentals[i].getPrice().compareTo(mostExpensiveRental.getPrice()) > 0) {
+                mostExpensiveRental = rentals[i];
+            }
+        }
+        return mostExpensiveRental;
+    }
+
+    public static Rental findLeastExpensiveRental(Rental[] rentals) {
+        Rental leastExpensiveRental = rentals[0];
+        for(int i = 1; i < rentals.length; i++) {
+            if (rentals[i].getPrice().compareTo(leastExpensiveRental.getPrice()) < 0) {
+                leastExpensiveRental = rentals[i];
+            }
+        }
+        return leastExpensiveRental;
+    }
+
+    public static Rental[] findRentalsByCarBrand(String brand, Rental[] rentals) {
+        Rental[] foundRentals = new Rental[rentals.length];
+        Integer i = 0;
+        for (Rental rental : rentals) {
+            if (rental.getCar().getBrand().equalsIgnoreCase(brand)) {
+                foundRentals[i] = rental;
+                i++;
+            }
+        }
+
+        return foundRentals;
+    }
+
+    public static Rental[] findRentalsByUser(User user, Rental[] rentals) {
+        Rental[] foundRentals = new Rental[rentals.length];
+        Integer i = 0;
+        for (Rental rental : rentals) {
+            if (rental.getUser().equals(user)) {
+                foundRentals[i] = rental;
+                i++;
+            }
+        }
+
+        return foundRentals;
+    }
+
+    public static void printFoundRentals(Rental[] foundRentals) {
+        for (int i = 0; i < foundRentals.length; i++) {
+            if (foundRentals[i] != null) {
+                System.out.println("Rental #" + i + ":");
+                foundRentals[i].print();
+            } else if(i == 0) {
+                System.out.println("There are no rentals with the specified car brand.");
+                break;
+            }
+        }
+    }
 }
