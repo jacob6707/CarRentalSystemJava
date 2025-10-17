@@ -113,7 +113,7 @@ public class Rental {
                 System.out.println("Rental #" + i + ":");
                 foundRentals[i].print();
             } else if(i == 0) {
-                System.out.println("There are no rentals with the specified car brand.");
+                System.out.println("No rentals found with the specified criteria.");
                 break;
             }
         }
