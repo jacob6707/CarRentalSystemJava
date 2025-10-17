@@ -1,8 +1,8 @@
-package dev.jacob6707.app;
+package dev.jacob6707.carrentalsystem.app;
 
-import dev.jacob6707.entities.Car;
-import dev.jacob6707.entities.Rental;
-import dev.jacob6707.entities.User;
+import dev.jacob6707.carrentalsystem.entities.Car;
+import dev.jacob6707.carrentalsystem.entities.Rental;
+import dev.jacob6707.carrentalsystem.entities.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

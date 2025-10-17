@@ -1,4 +1,4 @@
-package dev.jacob6707.entities;
+package dev.jacob6707.carrentalsystem.entities;
 
 public class User {
     private String firstName;
