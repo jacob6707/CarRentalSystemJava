@@ -2,7 +2,7 @@ package dev.jacob6707.carrentalsystem.app;
 
 import dev.jacob6707.carrentalsystem.entities.Car;
 import dev.jacob6707.carrentalsystem.entities.Rental;
-import dev.jacob6707.carrentalsystem.entities.User;
+import dev.jacob6707.carrentalsystem.entities.Customer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,20 +19,20 @@ public class CarRentalSystemApp {
 
         System.out.println("Car Rental System");
 
-        User[] users = generateUsers(sc, NUMBER_OF_USERS);
+        Customer[] customers = generateUsers(sc, NUMBER_OF_USERS);
         Car[] cars = generateCars(sc, NUMBER_OF_CARS);
         Rental[] rentals = new Rental[NUMBER_OF_RENTALS];
 
         for (int i = 0; i < NUMBER_OF_RENTALS; i++) {
             System.out.println("===RENTAL #" + (i + 1) + " INPUT===");
-            User user = selectUser(sc, users);
+            Customer customer = selectUser(sc, customers);
             Car car = selectCar(sc, cars);
             System.out.print("Enter how many days the car will be rented for: ");
             Integer numOfDays = sc.nextInt();
             sc.nextLine();
             LocalDateTime start = LocalDateTime.now();
             LocalDateTime end = start.plusDays(numOfDays);
-            rentals[i] = new Rental(user, car, start, end);
+            rentals[i] = new Rental(customer, car, start, end);
         }
 
         Integer ordinal = 1;
@@ -57,33 +57,30 @@ public class CarRentalSystemApp {
             } while(choice < 1 || choice > 5);
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     Rental mostExpensiveRental = Rental.findMostExpensiveRental(rentals);
                     System.out.println("Most expensive rental:");
                     mostExpensiveRental.print();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     Rental leastExpensiveRental = Rental.findLeastExpensiveRental(rentals);
                     System.out.println("Least expensive rental:");
                     leastExpensiveRental.print();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     System.out.print("Enter car brand: ");
                     String brand = sc.nextLine();
                     Rental[] rentalsByCarBrand = Rental.findRentalsByCarBrand(brand, rentals);
                     Rental.printFoundRentals(rentalsByCarBrand);
-                    break;
-                case 4:
-                    User user = selectUser(sc, users);
-                    Rental[] rentalsByUser = Rental.findRentalsByUser(user, rentals);
+                }
+                case 4 -> {
+                    Customer customer = selectUser(sc, customers);
+                    Rental[] rentalsByUser = Rental.findRentalsByUser(customer, rentals);
                     Rental.printFoundRentals(rentalsByUser);
-                    break;
-                case 5:
-                    printCarsList(cars);
-                    break;
-                default:
-                    System.out.println("Invalid choice");
-                    break;
+                }
+                case 5 -> printCarsList(cars);
+
+                default -> System.out.println("Invalid choice");
             }
 
             System.out.print("Do you want to continue (Y/N)? ");
@@ -93,8 +90,8 @@ public class CarRentalSystemApp {
         sc.close();
     }
 
-    private static User[] generateUsers(Scanner sc, Integer count) {
-        User[] users = new User[count];
+    private static Customer[] generateUsers(Scanner sc, Integer count) {
+        Customer[] customers = new Customer[count];
         for (Integer i = 0; i < count; i++) {
             System.out.println("===USER #" + (i+1) + " INPUT===");
             System.out.print("Enter user #" + (i+1) + "'s first name: ");
@@ -103,9 +100,9 @@ public class CarRentalSystemApp {
             String lastName = sc.nextLine();
             System.out.print("Enter user #" + (i+1) + "'s email: ");
             String email = sc.nextLine();
-            users[i] = new User(name, lastName, email);
+            customers[i] = new Customer.CustomerBuilder(name, lastName, email).build();
         }
-        return users;
+        return customers;
     }
 
     private static Car[] generateCars(Scanner sc, Integer count) {
@@ -127,12 +124,12 @@ public class CarRentalSystemApp {
         return cars;
     }
 
-    private static User selectUser(Scanner sc, User[] users) {
+    private static Customer selectUser(Scanner sc, Customer[] customers) {
         Integer ordinal = 1;
 
         System.out.println("Available users:");
-        for (User user : users) {
-            System.out.println(ordinal + ") " + user.getFirstName() + " " + user.getLastName() + "(" + user.getEmail() + ")");
+        for (Customer customer : customers) {
+            System.out.println(ordinal + ") " + customer.getFirstName() + " " + customer.getLastName() + "(" + customer.getEmail() + ")");
             ordinal++;
         }
 
@@ -141,9 +138,9 @@ public class CarRentalSystemApp {
             System.out.print("Select user> ");
             selection = sc.nextInt();
             sc.nextLine();
-        } while (selection < 1 || selection > users.length);
+        } while (selection < 1 || selection > customers.length);
 
-        return users[selection-1];
+        return customers[selection-1];
     }
 
     private static Car selectCar(Scanner sc, Car[] cars) {
@@ -151,7 +148,7 @@ public class CarRentalSystemApp {
 
         System.out.println("Available Cars:");
         for (Car car : cars) {
-            if (car.getAvailable()) {
+            if (car.isAvailable()) {
                 System.out.println(ordinal + ") " + car.getYear() + " " + car.getBrand() + " " + car.getModel() + "(EUR" + car.getDailyPrice() + "/day)");
             }
             ordinal++;
@@ -162,12 +159,12 @@ public class CarRentalSystemApp {
             System.out.print("Select car> ");
             selection = sc.nextInt();
             sc.nextLine();
-            if (selection >= 1 && selection <= cars.length && !cars[selection-1].getAvailable()) {
+            if (selection >= 1 && selection <= cars.length && !cars[selection-1].isAvailable()) {
                 System.out.println("Car #" + selection + " is not available");
             }
-        }  while (selection < 1 || selection > cars.length || !cars[selection-1].getAvailable());
+        }  while (selection < 1 || selection > cars.length || !cars[selection-1].isAvailable());
 
-        cars[selection-1].setAvailable(false);
+        cars[selection-1].rent();
         return cars[selection-1];
     }
 
@@ -175,7 +172,7 @@ public class CarRentalSystemApp {
         Integer ordinal = 1;
         System.out.println("Car availability:");
         for(Car car : cars) {
-            System.out.println(ordinal + ") " + car.getYear() + " " + car.getBrand() + " " + car.getModel() + "(EUR" + car.getDailyPrice() + "/day): " + (car.getAvailable() ? "AVAILABLE" : "NOT AVAILABLE"));
+            System.out.println(ordinal + ") " + car.getYear() + " " + car.getBrand() + " " + car.getModel() + "(EUR" + car.getDailyPrice() + "/day): " + (car.isAvailable() ? "AVAILABLE" : "NOT AVAILABLE"));
             ordinal++;
         }
     }

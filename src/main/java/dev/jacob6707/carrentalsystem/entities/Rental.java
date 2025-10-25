@@ -5,24 +5,24 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class Rental {
-    private User user;
+    private Customer customer;
     private Car car;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public Rental(User user, Car car, LocalDateTime startDate, LocalDateTime endDate) {
-        this.user = user;
+    public Rental(Customer customer, Car car, LocalDateTime startDate, LocalDateTime endDate) {
+        this.customer = customer;
         this.car = car;
         this.startDate = startDate;
         this.endDate = endDate;
     }
 
-    public User getUser() {
-        return user;
+    public Customer getUser() {
+        return customer;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(Customer customer) {
+        this.customer = customer;
     }
 
     public Car getCar() {
@@ -94,11 +94,11 @@ public class Rental {
         return foundRentals;
     }
 
-    public static Rental[] findRentalsByUser(User user, Rental[] rentals) {
+    public static Rental[] findRentalsByUser(Customer customer, Rental[] rentals) {
         Rental[] foundRentals = new Rental[rentals.length];
         Integer i = 0;
         for (Rental rental : rentals) {
-            if (rental.getUser().equals(user)) {
+            if (rental.getUser().equals(customer)) {
                 foundRentals[i] = rental;
                 i++;
             }

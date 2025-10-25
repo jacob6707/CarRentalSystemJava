@@ -2,11 +2,11 @@ package dev.jacob6707.carrentalsystem.entities;
 
 import java.math.BigDecimal;
 
-public class Car {
-    private String brand;
-    private String model;
-    private Integer year;
-    private BigDecimal dailyPrice;
+public final class Car implements Rentable, Serviceable {
+    private final String brand;
+    private final String model;
+    private final Integer year;
+    private final BigDecimal dailyPrice;
     private Boolean available;
 
     public Car(String brand, String model, Integer year, BigDecimal dailyPrice, Boolean available) {
@@ -21,39 +21,35 @@ public class Car {
         return brand;
     }
 
-    public void setBrand(String brand) {
-        this.brand = brand;
-    }
-
     public String getModel() {
         return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
     }
 
     public Integer getYear() {
         return year;
     }
 
-    public void setYear(Integer year) {
-        this.year = year;
-    }
-
     public BigDecimal getDailyPrice() {
         return dailyPrice;
     }
 
-    public void setDailyPrice(BigDecimal dailyPrice) {
-        this.dailyPrice = dailyPrice;
-    }
-
-    public Boolean getAvailable() {
+    @Override
+    public boolean isAvailable() {
         return available;
     }
 
-    public void setAvailable(Boolean available) {
-        this.available = available;
+    @Override
+    public void rent() {
+        available = false;
+    }
+
+    @Override
+    public void returnBack() {
+        available = true;
+    }
+
+    @Override
+    public void service() {
+        System.out.println("Servicing car: " + brand + " " + model);
     }
 }
