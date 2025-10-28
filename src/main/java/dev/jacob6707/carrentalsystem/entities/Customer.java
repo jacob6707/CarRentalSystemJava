@@ -1,11 +1,11 @@
 package dev.jacob6707.carrentalsystem.entities;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 public class Customer extends Person {
-    private String address;
-    private String city;
-    private String state;
-    private String postalCode;
-    private String phoneNumber;
+
+    private BigDecimal discountRate;
 
     @Override
     public String getRole() {
@@ -13,48 +13,32 @@ public class Customer extends Person {
     }
 
     private Customer(CustomerBuilder builder) {
-        super(builder.firstName, builder.lastName, builder.email);
-        this.address = builder.address;
-        this.city = builder.city;
-        this.state = builder.state;
-        this.postalCode = builder.postalCode;
-        this.phoneNumber = builder.phoneNumber;
+        super(builder.firstName, builder.lastName, builder.email, builder.phoneNumber, builder.idNumber, builder.location, builder.dateOfBirth);
+        this.discountRate = builder.discountRate;
     }
 
     public static class CustomerBuilder {
-        private final String firstName;
-        private final String lastName;
-        private final String email;
-
-        private String address;
-        private String city;
-        private String state;
-        private String postalCode;
+        private String firstName;
+        private String lastName;
+        private String email;
         private String phoneNumber;
+        private String idNumber;
+        private Location location;
+        private LocalDate dateOfBirth;
+        private BigDecimal discountRate;
 
-        public CustomerBuilder(String firstName, String lastName, String email) {
+        public CustomerBuilder firstName(String firstName) {
             this.firstName = firstName;
+            return this;
+        }
+
+        public CustomerBuilder lastName(String lastName) {
             this.lastName = lastName;
+            return this;
+        }
+
+        public CustomerBuilder email(String email) {
             this.email = email;
-        }
-
-        public CustomerBuilder address(String address) {
-            this.address = address;
-            return this;
-        }
-
-        public CustomerBuilder city(String city) {
-            this.city = city;
-            return this;
-        }
-
-        public CustomerBuilder state(String state) {
-            this.state = state;
-            return this;
-        }
-
-        public CustomerBuilder postalCode(String postalCode) {
-            this.postalCode = postalCode;
             return this;
         }
 
@@ -63,48 +47,36 @@ public class Customer extends Person {
             return this;
         }
 
+        public CustomerBuilder idNumber(String idNumber) {
+            this.idNumber = idNumber;
+            return this;
+        }
+
+        public CustomerBuilder location(Location location) {
+            this.location = location;
+            return this;
+        }
+
+        public CustomerBuilder dateOfBirth(LocalDate dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+            return this;
+        }
+
+        public CustomerBuilder discountRate(BigDecimal discountRate) {
+            this.discountRate = discountRate;
+            return this;
+        }
+
         public Customer build() {
             return new Customer(this);
         }
     }
 
-    public String getAddress() {
-        return address;
+    public BigDecimal getDiscountRate() {
+        return discountRate;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setDiscountRate(BigDecimal discountRate) {
+        this.discountRate = discountRate;
     }
 }

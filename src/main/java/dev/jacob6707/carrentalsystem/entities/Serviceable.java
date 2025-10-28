@@ -1,5 +1,5 @@
 package dev.jacob6707.carrentalsystem.entities;
 
-public sealed interface Serviceable permits Car {
+public sealed interface Serviceable permits Car, SUV {
     void service();
 }

@@ -6,11 +6,11 @@ import java.time.LocalDateTime;
 
 public class Rental {
     private Customer customer;
-    private Car car;
+    private Rentable car;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
-    public Rental(Customer customer, Car car, LocalDateTime startDate, LocalDateTime endDate) {
+    public Rental(Customer customer, Rentable car, LocalDateTime startDate, LocalDateTime endDate) {
         this.customer = customer;
         this.car = car;
         this.startDate = startDate;
@@ -25,11 +25,11 @@ public class Rental {
         this.customer = customer;
     }
 
-    public Car getCar() {
+    public Rentable getCar() {
         return car;
     }
 
-    public void setCar(Car car) {
+    public void setCar(Rentable car) {
         this.car = car;
     }
 
@@ -56,7 +56,11 @@ public class Rental {
 
     public void print() {
         System.out.println("Rented by: " + this.getUser().getFirstName() + " " + this.getUser().getLastName());
-        System.out.println("Car: " + this.getCar().getYear() + " " + this.getCar().getBrand() + " " + this.getCar().getModel());
+        if (this.getCar() instanceof SUV suv) {
+            System.out.println("SUV: " + suv.getYear() + " " + suv.getBrand() + " " + suv.getModel());
+        } else if (this.getCar() instanceof Car car) {
+            System.out.println("Car: " + car.getYear() + " " + car.getBrand() + " " + car.getModel());
+        }
         System.out.println("Rented until: " + this.getEndDate());
         System.out.println("Price: EUR" + this.getPrice());
     }
@@ -85,7 +89,15 @@ public class Rental {
         Rental[] foundRentals = new Rental[rentals.length];
         Integer i = 0;
         for (Rental rental : rentals) {
-            if (rental.getCar().getBrand().equalsIgnoreCase(brand)) {
+            String carBrand;
+            if (rental.getCar() instanceof SUV suv) {
+                carBrand = suv.getBrand();
+            } else if (rental.getCar() instanceof Car car) {
+                carBrand = car.getBrand();
+            } else {
+                continue;
+            }
+            if (carBrand.equalsIgnoreCase(brand)) {
                 foundRentals[i] = rental;
                 i++;
             }
