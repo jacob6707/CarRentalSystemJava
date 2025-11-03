@@ -3,6 +3,9 @@ package dev.jacob6707.carrentalsystem.entities;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Abstract class that represents a person.
+ */
 public abstract class Person {
     protected String firstName;
     protected String lastName;

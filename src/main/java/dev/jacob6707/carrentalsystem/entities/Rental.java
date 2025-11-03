@@ -4,12 +4,23 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+/**
+ * Class that represents a rental.
+ */
 public class Rental {
     private Customer customer;
     private Rentable car;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
 
+    /**
+     * Constructs a new rental.
+     *
+     * @param customer The customer that rented the car
+     * @param car The rented car
+     * @param startDate The start date of the rental
+     * @param endDate The end date of the rental
+     */
     public Rental(Customer customer, Rentable car, LocalDateTime startDate, LocalDateTime endDate) {
         this.customer = customer;
         this.car = car;
@@ -25,7 +36,7 @@ public class Rental {
         this.customer = customer;
     }
 
-    public Rentable getCar() {
+    public Rentable getVehicle() {
         return car;
     }
 
@@ -54,80 +65,17 @@ public class Rental {
         return car.getDailyPrice().multiply(days);
     }
 
+    /**
+     * Prints the rental information.
+     */
     public void print() {
         System.out.println("Rented by: " + this.getUser().getFirstName() + " " + this.getUser().getLastName());
-        if (this.getCar() instanceof SUV suv) {
+        if (this.getVehicle() instanceof SUV suv) {
             System.out.println("SUV: " + suv.getYear() + " " + suv.getBrand() + " " + suv.getModel());
-        } else if (this.getCar() instanceof Car car) {
+        } else if (this.getVehicle() instanceof Car car) {
             System.out.println("Car: " + car.getYear() + " " + car.getBrand() + " " + car.getModel());
         }
         System.out.println("Rented until: " + this.getEndDate());
         System.out.println("Price: EUR" + this.getPrice());
-    }
-
-    public static Rental findMostExpensiveRental(Rental[] rentals) {
-        Rental mostExpensiveRental = rentals[0];
-        for(int i = 1; i < rentals.length; i++) {
-            if (rentals[i].getPrice().compareTo(mostExpensiveRental.getPrice()) > 0) {
-                mostExpensiveRental = rentals[i];
-            }
-        }
-        return mostExpensiveRental;
-    }
-
-    public static Rental findLeastExpensiveRental(Rental[] rentals) {
-        Rental leastExpensiveRental = rentals[0];
-        for(int i = 1; i < rentals.length; i++) {
-            if (rentals[i].getPrice().compareTo(leastExpensiveRental.getPrice()) < 0) {
-                leastExpensiveRental = rentals[i];
-            }
-        }
-        return leastExpensiveRental;
-    }
-
-    public static Rental[] findRentalsByCarBrand(String brand, Rental[] rentals) {
-        Rental[] foundRentals = new Rental[rentals.length];
-        Integer i = 0;
-        for (Rental rental : rentals) {
-            String carBrand;
-            if (rental.getCar() instanceof SUV suv) {
-                carBrand = suv.getBrand();
-            } else if (rental.getCar() instanceof Car car) {
-                carBrand = car.getBrand();
-            } else {
-                continue;
-            }
-            if (carBrand.equalsIgnoreCase(brand)) {
-                foundRentals[i] = rental;
-                i++;
-            }
-        }
-
-        return foundRentals;
-    }
-
-    public static Rental[] findRentalsByUser(Customer customer, Rental[] rentals) {
-        Rental[] foundRentals = new Rental[rentals.length];
-        Integer i = 0;
-        for (Rental rental : rentals) {
-            if (rental.getUser().equals(customer)) {
-                foundRentals[i] = rental;
-                i++;
-            }
-        }
-
-        return foundRentals;
-    }
-
-    public static void printFoundRentals(Rental[] foundRentals) {
-        for (int i = 0; i < foundRentals.length; i++) {
-            if (foundRentals[i] != null) {
-                System.out.println("Rental #" + i + ":");
-                foundRentals[i].print();
-            } else if(i == 0) {
-                System.out.println("No rentals found with the specified criteria.");
-                break;
-            }
-        }
     }
 }

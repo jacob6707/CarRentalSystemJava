@@ -3,10 +3,17 @@ package dev.jacob6707.carrentalsystem.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Class that represents a customer.
+ */
 public class Customer extends Person {
 
     private BigDecimal discountRate;
 
+    /**
+     * Gets the role of the customer.
+     * @return "Customer"
+     */
     @Override
     public String getRole() {
         return "Customer";
@@ -17,6 +24,9 @@ public class Customer extends Person {
         this.discountRate = builder.discountRate;
     }
 
+    /**
+     * Builder for the Customer class.
+     */
     public static class CustomerBuilder {
         private String firstName;
         private String lastName;
@@ -25,7 +35,7 @@ public class Customer extends Person {
         private String idNumber;
         private Location location;
         private LocalDate dateOfBirth;
-        private BigDecimal discountRate;
+        private BigDecimal discountRate = BigDecimal.ZERO;
 
         public CustomerBuilder firstName(String firstName) {
             this.firstName = firstName;
@@ -67,15 +77,27 @@ public class Customer extends Person {
             return this;
         }
 
+        /**
+         * Builds the Customer object.
+         * @return The Customer object
+         */
         public Customer build() {
             return new Customer(this);
         }
     }
 
+    /**
+     * Gets the discount rate of the customer.
+     * @return The discount rate of the customer
+     */
     public BigDecimal getDiscountRate() {
         return discountRate;
     }
 
+    /**
+     * Sets the discount rate of the customer.
+     * @param discountRate The discount rate of the customer
+     */
     public void setDiscountRate(BigDecimal discountRate) {
         this.discountRate = discountRate;
     }

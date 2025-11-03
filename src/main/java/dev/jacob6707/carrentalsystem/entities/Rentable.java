@@ -1,10 +1,16 @@
 package dev.jacob6707.carrentalsystem.entities;
 
+import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
+
 import java.math.BigDecimal;
 
+/**
+ * Interface that represents a rentable vehicle.
+ * Rentable vehicles can be rented and returned and have a daily price.
+ */
 public interface Rentable {
     boolean isAvailable();
-    void rent();
-    void returnBack();
+    void rent() throws VehicleBookingException;
+    void returnBack() throws VehicleBookingException;
     BigDecimal getDailyPrice();
 }

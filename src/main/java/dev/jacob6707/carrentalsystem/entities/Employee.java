@@ -3,6 +3,9 @@ package dev.jacob6707.carrentalsystem.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+/**
+ * Class that represents an employee.
+ */
 public class Employee extends Person {
     private BigDecimal salary;
 
@@ -11,6 +14,9 @@ public class Employee extends Person {
         this.salary = builder.salary;
     }
 
+    /**
+     * Builder for the Employee class.
+     */
     public static class EmployeeBuilder {
         private String firstName;
         private String lastName;
@@ -61,20 +67,36 @@ public class Employee extends Person {
             return this;
         }
 
+        /**
+         * Builds the Employee object.
+         * @return The Employee object
+         */
         public Employee build() {
             return new Employee(this);
         }
     }
 
+    /**
+     * Gets the role of the employee.
+     * @return "Employee"
+     */
     @Override
     public String getRole() {
         return "Employee";
     }
 
+    /**
+     * Gets the salary of the employee.
+     * @return The salary of the employee
+     */
     public BigDecimal getSalary() {
         return salary;
     }
 
+    /**
+     * Sets the salary of the employee.
+     * @param salary The salary of the employee
+     */
     public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
