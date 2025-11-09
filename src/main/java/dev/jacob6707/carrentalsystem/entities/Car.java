@@ -11,40 +11,81 @@ import java.math.BigDecimal;
  * @see Rentable
  * @see Serviceable
  */
-public final class Car implements Rentable, Serviceable {
-    private final String brand;
-    private final String model;
-    private final Integer year;
+public final class Car extends Vehicle implements Rentable, Serviceable {
     private final BigDecimal dailyPrice;
     private Boolean available;
 
+    private Car(CarBuilder builder) {
+        super(builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
+        this.dailyPrice = builder.dailyPrice;
+        this.available = builder.available;
+    }
+
     /**
-     * Constructor for Car class.
-     *
-     * @param brand Brand of the car
-     * @param model Model of the car
-     * @param year Year of manufacture of the car
-     * @param dailyPrice Daily price of the car
-     * @param available Availability of the car
+     * Builder for the {@link Car} class.
+     * <p>
+     * Uses the following attributes:
+     * - licensePlate(String licensePlate)
+     * - brand(String brand)
+     * - model(String model)
+     * - year(Integer year)
+     * - mileage(Integer mileage)
+     * - dailyPrice(BigDecimal dailyPrice)
+     * - available(Boolean available)
+     * <p>
+     * Builds a {@link Car} object when {@link #build()} is called.
      */
-    public Car(String brand, String model, Integer year, BigDecimal dailyPrice, Boolean available) {
-        this.brand = brand;
-        this.model = model;
-        this.year = year;
-        this.dailyPrice = dailyPrice;
-        this.available = available;
-    }
+    public static class CarBuilder {
+        private String licensePlate;
+        private String brand;
+        private String model;
+        private Integer year;
+        private Integer mileage = 0;
+        private BigDecimal dailyPrice = BigDecimal.ZERO;
+        private Boolean available = true;
 
-    public String getBrand() {
-        return brand;
-    }
+        public CarBuilder licensePlate(String licensePlate) {
+            this.licensePlate = licensePlate;
+            return this;
+        }
 
-    public String getModel() {
-        return model;
-    }
+        public CarBuilder brand(String brand) {
+            this.brand = brand;
+            return this;
+        }
 
-    public Integer getYear() {
-        return year;
+        public CarBuilder model(String model) {
+            this.model = model;
+            return this;
+        }
+
+        public CarBuilder year(Integer year) {
+            this.year = year;
+            return this;
+        }
+
+        public CarBuilder mileage(Integer mileage) {
+            this.mileage = mileage;
+            return this;
+        }
+
+        public CarBuilder dailyPrice(BigDecimal dailyPrice) {
+            this.dailyPrice = dailyPrice;
+            return this;
+        }
+
+        public CarBuilder available(Boolean available) {
+            this.available = available;
+            return this;
+        }
+
+        /**
+         * Builds the Car object.
+         * @return {@link Car}
+         */
+        public Car build() {
+            return new Car(this);
+        }
     }
 
     public BigDecimal getDailyPrice() {
@@ -90,4 +131,5 @@ public final class Car implements Rentable, Serviceable {
     public void service() {
         System.out.println("Servicing car: " + brand + " " + model);
     }
+
 }

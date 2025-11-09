@@ -12,11 +12,12 @@ public class Customer extends Person {
 
     /**
      * Gets the role of the customer.
-     * @return "Customer"
+     * @return PersonRole.CUSTOMER
+     * @see PersonRole
      */
     @Override
-    public String getRole() {
-        return "Customer";
+    public PersonRole getRole() {
+        return PersonRole.CUSTOMER;
     }
 
     private Customer(CustomerBuilder builder) {

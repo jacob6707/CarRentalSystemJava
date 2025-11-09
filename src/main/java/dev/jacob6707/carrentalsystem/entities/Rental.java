@@ -28,11 +28,11 @@ public class Rental {
         this.endDate = endDate;
     }
 
-    public Customer getUser() {
+    public Customer getCustomer() {
         return customer;
     }
 
-    public void setUser(Customer customer) {
+    public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
@@ -69,11 +69,9 @@ public class Rental {
      * Prints the rental information.
      */
     public void print() {
-        System.out.println("Rented by: " + this.getUser().getFirstName() + " " + this.getUser().getLastName());
-        if (this.getVehicle() instanceof SUV suv) {
-            System.out.println("SUV: " + suv.getYear() + " " + suv.getBrand() + " " + suv.getModel());
-        } else if (this.getVehicle() instanceof Car car) {
-            System.out.println("Car: " + car.getYear() + " " + car.getBrand() + " " + car.getModel());
+        System.out.println("Rented by: " + this.getCustomer().getFirstName() + " " + this.getCustomer().getLastName());
+        if (this.getVehicle() instanceof Vehicle vehicle) {
+            System.out.println("Vehicle: " + vehicle.getYear() + " " + vehicle.getBrand() + " " + vehicle.getModel());
         }
         System.out.println("Rented until: " + this.getEndDate());
         System.out.println("Price: EUR" + this.getPrice());

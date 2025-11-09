@@ -10,7 +10,7 @@ package dev.jacob6707.carrentalsystem.entities;
  */
 public record Location(String address, String city, String state, String postalCode, String country) {
     /**
-     * Returns the full address of the location.
+     * Gets the full address of the location.
      * @return The full address (address, postal code, city, state, country)
      */
     public String getFullAddress() {

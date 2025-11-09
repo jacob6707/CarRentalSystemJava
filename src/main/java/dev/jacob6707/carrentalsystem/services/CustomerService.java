@@ -1,11 +1,11 @@
 package dev.jacob6707.carrentalsystem.services;
 
 import dev.jacob6707.carrentalsystem.entities.Customer;
-import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
+import dev.jacob6707.carrentalsystem.exception.InvalidDateFormatException;
 import dev.jacob6707.carrentalsystem.exception.NoCustomersFoundException;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -14,35 +14,34 @@ import java.util.Scanner;
  * @see Customer
  */
 public class CustomerService {
+
     /**
-     * Generates a list of customers through user input.
+     * Generates a customer through user input.
      *
      * @param sc Scanner object for reading user input
-     * @param numberOfCustomers Number of customers to generate
-     * @return Array of generated customers
-     * @throws InvalidNumericValueException if the number of customers is less than 1
+     * @return The generated customer
      */
-    public static Customer[] generateCustomers(Scanner sc, Integer numberOfCustomers) throws InvalidNumericValueException {
-        if (numberOfCustomers < 1) throw new InvalidNumericValueException("Number of customers must be greater than 0.");
-        Customer[] customers = new Customer[numberOfCustomers];
-        for (Integer i = 0; i < numberOfCustomers; i++) {
-            System.out.println("===CUSTOMER #" + (i+1) + " INPUT===");
-            System.out.print("Enter customer #" + (i+1) + "'s first name: ");
-            String firstName = sc.nextLine();
-            System.out.print("Enter customer #" + (i+1) + "'s last name: ");
-            String lastName = sc.nextLine();
-            System.out.print("Enter customer #" + (i+1) + "'s email: ");
-            String email = sc.nextLine();
-            System.out.print("Enter customer #" + (i+1) + "'s date of birth (dd.MM.yyyy): ");
-            LocalDate dateOfBirth = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-            customers[i] = new Customer.CustomerBuilder()
-                    .firstName(firstName)
-                    .lastName(lastName)
-                    .email(email)
-                    .dateOfBirth(dateOfBirth)
-                    .build();
+    public static Customer generateCustomer(Scanner sc) {
+        System.out.println("Enter customer's first name: ");
+        String firstName = sc.nextLine();
+        System.out.println("Enter customer's last name: ");
+        String lastName = sc.nextLine();
+        System.out.println("Enter customer's email: ");
+        String email = sc.nextLine();
+        LocalDate dateOfBirth = null;
+        while (dateOfBirth == null) {
+            try {
+                dateOfBirth = InputService.readValidatedDate(sc, "Enter customer's date of birth (dd.MM.yyyy): ", "dd.MM.yyyy");
+            } catch (InvalidDateFormatException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        return customers;
+        return new Customer.CustomerBuilder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .email(email)
+                .dateOfBirth(dateOfBirth)
+                .build();
     }
 
     /**
@@ -52,8 +51,8 @@ public class CustomerService {
      * @param customers Array of customers
      * @return The selected customer
      */
-    public static Customer selectCustomer(Scanner sc, Customer[] customers) {
-        if (customers.length == 0) throw new NoCustomersFoundException("No customers available.");
+    public static Customer selectCustomer(Scanner sc, List<Customer> customers) {
+        if (customers.isEmpty()) throw new NoCustomersFoundException("No customers available.");
         Integer ordinal = 1;
 
         System.out.println("Available customers:");
@@ -62,14 +61,14 @@ public class CustomerService {
             ordinal++;
         }
 
-        Integer selection;
+        int selection;
         do {
             System.out.print("Select customer> ");
             selection = sc.nextInt();
             sc.nextLine();
-        } while (selection < 1 || selection > customers.length);
+        } while (selection < 1 || selection > customers.size());
 
-        return customers[selection-1];
+        return customers.get(selection-1);
     }
 
 }

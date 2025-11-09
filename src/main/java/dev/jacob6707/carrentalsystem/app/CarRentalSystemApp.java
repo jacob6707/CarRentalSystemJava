@@ -10,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Main application class for the Car Rental System.
- * Handles initialization, user input, and main application flow.
+ * Handles initialization, user input, and the main application flow.
  */
 public class CarRentalSystemApp {
 
@@ -78,29 +78,48 @@ public class CarRentalSystemApp {
         try {
             logger.debug("Starting data collection for system entities");
 
+            List<Customer> customers = new ArrayList<>();
+
             Integer numberOfCustomers = InputService.readPositiveInteger(sc, "Enter number of customers: ");
-            Customer[] customers = CustomerService.generateCustomers(sc, numberOfCustomers);
-            logger.info("Generated {} customers", numberOfCustomers);
+            for (int i = 0; i < numberOfCustomers; i++) {
+                System.out.println("===CUSTOMER #" + (i+1) + " INPUT===");
+                customers.add(CustomerService.generateCustomer(sc));
+            }
+            logger.info("Generated {} customers", customers.size());
 
-            Person[] people = new Person[customers.length + 1];
-            people[0] = employee;
-            System.arraycopy(customers, 0, people, 1, customers.length);
+            Map<PersonRole, List<Person>> people = new HashMap<>();
 
+            people.put(PersonRole.EMPLOYEE, Collections.singletonList(employee));
+            people.put(PersonRole.CUSTOMER, List.copyOf(customers));
+
+            Set<Car> cars = new HashSet<>();
             Integer numberOfCars = InputService.readPositiveInteger(sc, "Enter number of cars: ");
-            Car[] cars = CarService.generateCars(sc, numberOfCars);
-            logger.info("Generated {} cars", numberOfCars);
+            for (int i = 0; i < numberOfCars; i++) {
+                System.out.println("===CAR #" + (i+1) + " INPUT===");
+                cars.add(CarService.generateCar(sc));
+            }
+            logger.info("Generated {} cars", cars.size());
 
+            Set<SUV> suvs = new HashSet<>();
             Integer numberOfSUVs = InputService.readPositiveInteger(sc, "Enter number of SUVs: ");
-            SUV[] suvs = CarService.generateSUVs(sc, numberOfSUVs);
-            logger.info("Generated {} SUVs", numberOfSUVs);
+            for (int i = 0; i < numberOfSUVs; i++) {
+                System.out.println("===SUV #" + (i+1) + " INPUT===");
+                suvs.add(CarService.generateSUV(sc));
+            }
+            logger.info("Generated {} SUVs", suvs.size());
 
-            Rentable[] rentables = new Rentable[suvs.length + cars.length];
-            System.arraycopy(suvs, 0, rentables, 0, suvs.length);
-            System.arraycopy(cars, 0, rentables, suvs.length, cars.length);
+            List<Rentable> rentables = new ArrayList<>();
 
+            rentables.addAll(cars);
+            rentables.addAll(suvs);
+
+            List<Rental> rentals = new ArrayList<>();
             Integer numberOfRentals = InputService.readPositiveInteger(sc, "Enter number of rentals: ");
-            Rental[] rentals = RentalService.generateRentals(sc, customers, rentables, numberOfRentals);
-            logger.info("Generated {} rentals", numberOfRentals);
+            for (int i = 0; i < numberOfRentals; i++) {
+                System.out.println("===RENTAL #" + (i + 1) + " INPUT===");
+                rentals.add(RentalService.generateRental(sc, customers, rentables));
+            }
+            logger.info("Generated {} rentals", rentals.size());
 
             RentalService.printAllRentals(rentals);
 

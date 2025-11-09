@@ -4,12 +4,13 @@ import dev.jacob6707.carrentalsystem.entities.Car;
 import dev.jacob6707.carrentalsystem.entities.Rentable;
 import dev.jacob6707.carrentalsystem.entities.SUV;
 import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
-import dev.jacob6707.carrentalsystem.exception.NoRentablesFoundException;
+import dev.jacob6707.carrentalsystem.exception.NoRentableFoundException;
 import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -21,60 +22,63 @@ import java.util.Scanner;
 public class CarService {
     private static final Logger logger = LoggerFactory.getLogger(CarService.class);
 
-    /**
-     * Generates a list of cars through user input
-     *
-     * @param sc Scanner object for reading user input
-     * @param numberOfCars Number of cars to generate
-     * @return Array of generated cars
-     * @throws InvalidNumericValueException if the number of cars is less than 1
-     */
-    public static Car[] generateCars(Scanner sc, Integer numberOfCars) throws InvalidNumericValueException {
-        if (numberOfCars < 1) throw new InvalidNumericValueException("Number of cars must be greater than 0.");
-        Car[] cars = new Car[numberOfCars];
-        for (Integer i = 0; i < numberOfCars; i++) {
-            System.out.println("===CAR #" + (i+1) + " INPUT===");
-            System.out.print("Enter car #" + (i+1) + "'s brand: ");
-            String brand = sc.nextLine();
-            System.out.print("Enter car #" + (i+1) + "'s model: ");
-            String model = sc.nextLine();
-            System.out.print("Enter car #" + (i+1) + "'s year of manufacture: ");
-            Integer year = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Enter car #" + (i+1) + "'s daily price: ");
-            BigDecimal dailyPrice = sc.nextBigDecimal();
-            sc.nextLine();
-            cars[i] = new Car(brand,model,year,dailyPrice,true);
+    public static Car generateCar(Scanner sc) {
+        System.out.print("Enter car's brand: ");
+        String brand = sc.nextLine();
+        System.out.print("Enter car's model: ");
+        String model = sc.nextLine();
+        System.out.print("Enter car's year of manufacture: ");
+        Integer year = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Enter car's daily price: ");
+        BigDecimal dailyPrice = null;
+        while (dailyPrice == null) {
+            try {
+                dailyPrice = InputService.readPositiveBigDecimal(sc, "Enter SUV's daily price: ");
+            } catch (InvalidNumericValueException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please try again.");
+            }
         }
-        return cars;
+        System.out.print("Enter car's license plate:");
+        String licensePlate = sc.nextLine();
+
+        return new Car.CarBuilder()
+                .licensePlate(licensePlate)
+                .brand(brand)
+                .model(model)
+                .year(year)
+                .dailyPrice(dailyPrice)
+                .build();
     }
 
-    /**
-     * Generates a list of SUVs through user input
-     *
-     * @param sc Scanner object for reading user input
-     * @param numberOfSUVs Number of SUVs to generate
-     * @return Array of generated SUVs
-     * @throws InvalidNumericValueException if the number of SUVs is less than 1
-     */
-    public static SUV[] generateSUVs(Scanner sc, Integer numberOfSUVs) throws InvalidNumericValueException {
-        if (numberOfSUVs < 1) throw new InvalidNumericValueException("Number of SUVs must be greater than 0.");
-        SUV[] cars = new SUV[numberOfSUVs];
-        for (Integer i = 0; i < numberOfSUVs; i++) {
-            System.out.println("===SUV #" + (i+1) + " INPUT===");
-            System.out.print("Enter SUV #" + (i+1) + "'s brand: ");
-            String brand = sc.nextLine();
-            System.out.print("Enter SUV #" + (i+1) + "'s model: ");
-            String model = sc.nextLine();
-            System.out.print("Enter SUV #" + (i+1) + "'s year of manufacture: ");
-            Integer year = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Enter SUV #" + (i+1) + "'s daily price: ");
-            BigDecimal dailyPrice = sc.nextBigDecimal();
-            sc.nextLine();
-            cars[i] = new SUV(brand,model,year,dailyPrice,true);
+    public static SUV generateSUV(Scanner sc) {
+        System.out.print("Enter SUV's brand: ");
+        String brand = sc.nextLine();
+        System.out.print("Enter SUV's model: ");
+        String model = sc.nextLine();
+        System.out.print("Enter SUV's year of manufacture: ");
+        Integer year = sc.nextInt();
+        sc.nextLine();
+        BigDecimal dailyPrice = null;
+        while (dailyPrice == null) {
+            try {
+                dailyPrice = InputService.readPositiveBigDecimal(sc, "Enter SUV's daily price: ");
+            } catch (InvalidNumericValueException e) {
+                System.out.println(e.getMessage());
+                System.out.println("Please try again.");
+            }
         }
-        return cars;
+        System.out.print("Enter SUV's license plate:");
+        String licensePlate = sc.nextLine();
+
+        return new SUV.SUVBuilder()
+                .licensePlate(licensePlate)
+                .brand(brand)
+                .model(model)
+                .year(year)
+                .dailyPrice(dailyPrice)
+                .build();
     }
 
     /**
@@ -84,8 +88,8 @@ public class CarService {
      * @param rentableCars Array of rentable cars
      * @return The selected rentable car
      */
-    public static Rentable selectCar(Scanner sc, Rentable[] rentableCars) {
-        if (rentableCars.length == 0) throw new NoRentablesFoundException("No rentable cars available.");
+    public static Rentable selectCar(Scanner sc, List<Rentable> rentableCars) {
+        if (rentableCars.isEmpty()) throw new NoRentableFoundException("No rentable cars available.");
         Integer ordinal = 1;
 
         System.out.println("Rentable Cars:");
@@ -93,30 +97,29 @@ public class CarService {
             if (rentable.isAvailable()) {
                 if (rentable instanceof Car car) {
                     System.out.println(ordinal + ") " + car.getYear() + " " + car.getBrand() + " " + car.getModel() + "(EUR" + car.getDailyPrice() + "/day)");
-                }
-                else if (rentable instanceof SUV suv) {
+                } else if (rentable instanceof SUV suv) {
                     System.out.println(ordinal + ") " + suv.getYear() + " " + suv.getBrand() + " " + suv.getModel() + "(EUR" + suv.getDailyPrice() + "/day)");
                 }
             }
             ordinal++;
         }
 
-        Integer selection;
+        int selection;
         do {
             System.out.print("Select car> ");
             selection = sc.nextInt();
             sc.nextLine();
             try {
-                rentableCars[selection-1].rent();
+                rentableCars.get(selection - 1).rent();
                 break;
             } catch (VehicleBookingException e) {
-                logger.error("Vehicle {} is already booked.", rentableCars[selection - 1].toString(), e);
+                logger.error("Vehicle {} is already booked.", rentableCars.get(selection - 1).toString(), e);
             } catch (ArrayIndexOutOfBoundsException e) {
                 logger.error("Invalid selection: {}", selection, e);
             }
-        } while (selection < 1 || selection > rentableCars.length || !rentableCars[selection-1].isAvailable());
+        } while (selection < 1 || selection > rentableCars.size() || !rentableCars.get(selection - 1).isAvailable());
 
-        return rentableCars[selection-1];
+        return rentableCars.get(selection - 1);
     }
 
     /**
@@ -124,8 +127,11 @@ public class CarService {
      *
      * @param rentableCars The array of rentable cars
      */
-    public static void printRentableCarsList(Rentable[] rentableCars) {
-        if (rentableCars.length == 0) throw new NoRentablesFoundException("No rentable cars available.");
+    public static void printRentableCarsList(List<Rentable> rentableCars) {
+        if (rentableCars.isEmpty()) {
+            System.out.println("No rentable cars available.");
+            return;
+        }
         Integer ordinal = 1;
         System.out.println("Car availability:");
         for(Rentable rentableCar : rentableCars) {

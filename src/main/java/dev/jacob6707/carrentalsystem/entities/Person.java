@@ -25,7 +25,12 @@ public abstract class Person {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public abstract String getRole();
+    /**
+     * Gets the role of the person.
+     * @return the role of the person
+     * @see PersonRole
+     */
+    public abstract PersonRole getRole();
 
     public String getFirstName() {
         return firstName;
@@ -77,6 +82,6 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return getRole() + " " + firstName + " " + lastName + " (email: " + email + " DOB: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + ")";
+        return getRole().getName() + " " + firstName + " " + lastName + " (email: " + email + " DOB: " + dateOfBirth.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + ")";
     }
 }

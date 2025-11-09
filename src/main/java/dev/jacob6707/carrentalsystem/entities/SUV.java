@@ -10,31 +10,81 @@ import java.math.BigDecimal;
  * @see Rentable
  * @see Serviceable
  */
-public final class SUV implements Rentable, Serviceable {
-    private final String brand;
-    private final String model;
-    private final Integer year;
+public final class SUV extends Vehicle implements Rentable, Serviceable {
     private final BigDecimal dailyPrice;
     private Boolean available;
 
-    public SUV(String brand, String model, Integer year, BigDecimal dailyPrice, Boolean available) {
-        this.brand = brand;
-        this.model = model;
-        this.year = year;
-        this.dailyPrice = dailyPrice;
-        this.available = available;
+    private SUV(SUVBuilder builder) {
+        super(builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
+        this.dailyPrice = builder.dailyPrice;
+        this.available = builder.available;
     }
 
-    public String getBrand() {
-        return brand;
-    }
+    /**
+     * Builder for the {@link SUV} class.
+     * <p>
+     * Uses the following attributes:
+     * - licensePlate(String licensePlate)
+     * - brand(String brand)
+     * - model(String model)
+     * - year(Integer year)
+     * - mileage(Integer mileage)
+     * - dailyPrice(BigDecimal dailyPrice)
+     * - available(Boolean available)
+     * <p>
+     * Builds a {@link SUV} object when {@link #build()} is called.
+     */
+    public static class SUVBuilder {
+        private String licensePlate;
+        private String brand;
+        private String model;
+        private Integer year;
+        private Integer mileage = 0;
+        private BigDecimal dailyPrice = BigDecimal.ZERO;
+        private Boolean available = true;
 
-    public String getModel() {
-        return model;
-    }
+        public SUVBuilder licensePlate(String licensePlate) {
+            this.licensePlate = licensePlate;
+            return this;
+        }
 
-    public Integer getYear() {
-        return year;
+        public SUVBuilder brand(String brand) {
+            this.brand = brand;
+            return this;
+        }
+
+        public SUVBuilder model(String model) {
+            this.model = model;
+            return this;
+        }
+
+        public SUVBuilder year(Integer year) {
+            this.year = year;
+            return this;
+        }
+
+        public SUVBuilder mileage(Integer mileage) {
+            this.mileage = mileage;
+            return this;
+        }
+
+        public SUVBuilder dailyPrice(BigDecimal dailyPrice) {
+            this.dailyPrice = dailyPrice;
+            return this;
+        }
+
+        public SUVBuilder available(Boolean available) {
+            this.available = available;
+            return this;
+        }
+
+        /**
+         * Builds the SUV object.
+         * @return {@link SUV}
+         */
+        public SUV build() {
+            return new SUV(this);
+        }
     }
 
     public BigDecimal getDailyPrice() {

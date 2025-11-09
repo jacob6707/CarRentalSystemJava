@@ -77,12 +77,13 @@ public class Employee extends Person {
     }
 
     /**
-     * Gets the role of the employee.
-     * @return "Employee"
+     * Gets the role of the person.
+     * @return PersonRole.EMPLOYEE
+     * @see PersonRole
      */
     @Override
-    public String getRole() {
-        return "Employee";
+    public PersonRole getRole() {
+        return PersonRole.EMPLOYEE;
     }
 
     /**

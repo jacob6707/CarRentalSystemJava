@@ -1,20 +1,20 @@
 package dev.jacob6707.carrentalsystem.services;
 
-import dev.jacob6707.carrentalsystem.entities.Customer;
-import dev.jacob6707.carrentalsystem.entities.Person;
-import dev.jacob6707.carrentalsystem.entities.Rentable;
-import dev.jacob6707.carrentalsystem.entities.Rental;
+import dev.jacob6707.carrentalsystem.entities.*;
 import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
  * Service that handles application logic.
  */
 public class AppService {
-    public static final Integer NUMBER_OF_CHOICES = 7;
+    public static final Integer NUMBER_OF_CHOICES = 9;
     private static final Logger logger = LoggerFactory.getLogger(AppService.class);
 
     /**
@@ -29,6 +29,8 @@ public class AppService {
         System.out.println("5) Check car availability");
         System.out.println("6) Print youngest person");
         System.out.println("7) Print oldest person");
+        System.out.println("8) Sort rentals by price");
+        System.out.println("9) Sort rentals by date of return");
     }
 
     /**
@@ -41,30 +43,15 @@ public class AppService {
      * @param rentableCars Array of available Rentable vehicles
      * @param rentals Array of existing Rental records
      */
-    public static void chooseAction(Scanner sc, Person[] people, Rentable[] rentableCars, Rental[] rentals) {
-        logger.debug("Processing {} people, {} rentable cars, {} rentals", people.length, rentableCars.length, rentals.length);
-        // extract customers from array of people
-        Integer numberOfCustomers = 0;
-        for (Person person : people) {
-            if (person instanceof Customer) {
-                numberOfCustomers++;
-            }
-        }
-        logger.debug("Found {} customers", numberOfCustomers);
+    public static void chooseAction(Scanner sc, Map<PersonRole, List<Person>> people, List<Rentable> rentableCars, List<Rental> rentals) {
+        logger.debug("Processing {} people, {} rentable cars, {} rentals", people.size(), rentableCars.size(), rentals.size());
 
-        Customer[] customers = new Customer[numberOfCustomers];
-        for (Person person : people) {
-            if (person instanceof Customer customer) {
-                customers[numberOfCustomers - 1] = customer;
-                numberOfCustomers--;
-            }
-        }
-        // reverse the array
-        for (int i = 0; i < numberOfCustomers / 2; i++) {
-            Customer temp = customers[i];
-            customers[i] = customers[numberOfCustomers - 1 - i];
-            customers[numberOfCustomers - 1 - i] = temp;
-        }
+        List<Customer> customers = people.get(PersonRole.CUSTOMER).stream()
+                .filter(p -> p instanceof Customer)
+                .map(p -> (Customer) p)
+                .toList();
+        logger.debug("Found {} customers", customers.size());
+
         Integer choice = 0;
         boolean validChoice = false;
 
@@ -86,43 +73,63 @@ public class AppService {
             switch (choice) {
                 case 1 -> {
                     Rental mostExpensiveRental = RentalService.findMostExpensiveRental(rentals);
+                    if (mostExpensiveRental == null) {
+                        System.out.println("No rentals found");
+                        return;
+                    }
                     System.out.println("Most expensive rental:");
                     mostExpensiveRental.print();
                 }
                 case 2 -> {
                     Rental leastExpensiveRental = RentalService.findLeastExpensiveRental(rentals);
+                    if (leastExpensiveRental == null) {
+                        System.out.println("No rentals found");
+                        return;
+                    }
                     System.out.println("Least expensive rental:");
                     leastExpensiveRental.print();
                 }
                 case 3 -> {
                     System.out.print("Enter car brand: ");
                     String brand = sc.nextLine();
-                    Rental[] rentalsByCarBrand = RentalService.findRentalsByCarBrand(brand, rentals);
+                    List<Rental> rentalsByCarBrand = RentalService.findRentalsByCarBrand(brand, rentals);
                     RentalService.printFoundRentals(rentalsByCarBrand);
                 }
                 case 4 -> {
                     Customer customer = CustomerService.selectCustomer(sc, customers);
-                    Rental[] rentalsByUser = RentalService.findRentalsByUser(customer, rentals);
+                    List<Rental> rentalsByUser = RentalService.findRentalsByUser(customer, rentals);
                     RentalService.printFoundRentals(rentalsByUser);
                 }
                 case 5 -> CarService.printRentableCarsList(rentableCars);
                 case 6 -> {
-                    Person youngestPerson = people[0];
-                    for(int i = 1; i < people.length; i++) {
-                        if (people[i].getDateOfBirth().isAfter(youngestPerson.getDateOfBirth())) {
-                            youngestPerson = people[i];
-                        }
+                    Person youngestPerson = people.values().stream()
+                            .flatMap(List::stream)
+                            .max(Comparator.comparing(Person::getDateOfBirth))
+                            .orElse(null);
+                    if (youngestPerson == null) {
+                        System.out.println("No people found");
+                        return;
                     }
                     System.out.println("Youngest person: " + youngestPerson);
                 }
                 case 7 -> {
-                    Person oldestPerson = people[0];
-                    for(int i = 1; i < people.length; i++) {
-                        if (people[i].getDateOfBirth().isBefore(oldestPerson.getDateOfBirth())) {
-                            oldestPerson = people[i];
-                        }
+                    Person oldestPerson = people.values().stream()
+                            .flatMap(List::stream)
+                            .min(Comparator.comparing(Person::getDateOfBirth))
+                            .orElse(null);
+                    if (oldestPerson == null) {
+                        System.out.println("No people found");
+                        return;
                     }
                     System.out.println("Oldest person: " + oldestPerson);
+                }
+                case 8 -> {
+                    rentals.sort(Comparator.comparing(Rental::getPrice));
+                    RentalService.printAllRentals(rentals);
+                }
+                case 9 -> {
+                    rentals.sort((r1, r2) -> r1.getEndDate().compareTo(r2.getEndDate()));
+                    RentalService.printAllRentals(rentals);
                 }
 
                 default -> System.out.println("Invalid choice");
