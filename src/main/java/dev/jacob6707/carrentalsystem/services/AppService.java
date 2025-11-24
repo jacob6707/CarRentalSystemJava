@@ -5,10 +5,7 @@ import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Service that handles application logic.
@@ -52,6 +49,8 @@ public class AppService {
                 .toList();
         logger.debug("Found {} customers", customers.size());
 
+        List<Person> peopleList = people.values().stream().flatMap(Collection::stream).toList();
+
         Integer choice = 0;
         boolean validChoice = false;
 
@@ -72,22 +71,22 @@ public class AppService {
         try {
             switch (choice) {
                 case 1 -> {
-                    Rental mostExpensiveRental = RentalService.findMostExpensiveRental(rentals);
-                    if (mostExpensiveRental == null) {
+                    Optional<Rental> mostExpensiveRental = RentalService.findMostExpensiveRental(rentals);
+                    if (mostExpensiveRental.isEmpty()) {
                         System.out.println("No rentals found");
                         return;
                     }
                     System.out.println("Most expensive rental:");
-                    mostExpensiveRental.print();
+                    mostExpensiveRental.get().print();
                 }
                 case 2 -> {
-                    Rental leastExpensiveRental = RentalService.findLeastExpensiveRental(rentals);
-                    if (leastExpensiveRental == null) {
+                    Optional<Rental> leastExpensiveRental = RentalService.findLeastExpensiveRental(rentals);
+                    if (leastExpensiveRental.isEmpty()) {
                         System.out.println("No rentals found");
                         return;
                     }
                     System.out.println("Least expensive rental:");
-                    leastExpensiveRental.print();
+                    leastExpensiveRental.get().print();
                 }
                 case 3 -> {
                     System.out.print("Enter car brand: ");
@@ -102,26 +101,20 @@ public class AppService {
                 }
                 case 5 -> CarService.printRentableCarsList(rentableCars);
                 case 6 -> {
-                    Person youngestPerson = people.values().stream()
-                            .flatMap(List::stream)
-                            .max(Comparator.comparing(Person::getDateOfBirth))
-                            .orElse(null);
-                    if (youngestPerson == null) {
+                    Optional<? extends Person> youngestPerson = PersonService.findYoungestPerson(peopleList);
+                    if (youngestPerson.isEmpty()) {
                         System.out.println("No people found");
                         return;
                     }
-                    System.out.println("Youngest person: " + youngestPerson);
+                    System.out.println("Youngest person: " + youngestPerson.get());
                 }
                 case 7 -> {
-                    Person oldestPerson = people.values().stream()
-                            .flatMap(List::stream)
-                            .min(Comparator.comparing(Person::getDateOfBirth))
-                            .orElse(null);
-                    if (oldestPerson == null) {
+                    Optional<? extends Person> oldestPerson = PersonService.findOldestPerson(peopleList);
+                    if (oldestPerson.isEmpty()) {
                         System.out.println("No people found");
                         return;
                     }
-                    System.out.println("Oldest person: " + oldestPerson);
+                    System.out.println("Oldest person: " + oldestPerson.get());
                 }
                 case 8 -> {
                     rentals.sort(Comparator.comparing(Rental::getPrice));

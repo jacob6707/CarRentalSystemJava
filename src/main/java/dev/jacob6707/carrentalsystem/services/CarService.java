@@ -88,7 +88,7 @@ public class CarService {
      * @param rentableCars Array of rentable cars
      * @return The selected rentable car
      */
-    public static Rentable selectCar(Scanner sc, List<Rentable> rentableCars) {
+    public static Rentable selectCar(Scanner sc, List<? extends Rentable> rentableCars) {
         if (rentableCars.isEmpty()) throw new NoRentableFoundException("No rentable cars available.");
         Integer ordinal = 1;
 
@@ -127,7 +127,7 @@ public class CarService {
      *
      * @param rentableCars The array of rentable cars
      */
-    public static void printRentableCarsList(List<Rentable> rentableCars) {
+    public static void printRentableCarsList(List<? extends Rentable> rentableCars) {
         if (rentableCars.isEmpty()) {
             System.out.println("No rentable cars available.");
             return;

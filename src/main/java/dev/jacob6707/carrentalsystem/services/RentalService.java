@@ -5,6 +5,7 @@ import dev.jacob6707.carrentalsystem.entities.*;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -39,10 +40,10 @@ public class RentalService {
      * @param rentals The list of rentals
      * @return The most expensive rental
      */
-    public static Rental findMostExpensiveRental(List<Rental> rentals) {
+    public static Optional<Rental> findMostExpensiveRental(List<Rental> rentals) {
         return rentals
                 .stream()
-                .max(Comparator.comparing(Rental::getPrice)).orElse(null);
+                .max(Comparator.comparing(Rental::getPrice));
     }
 
     /**
@@ -51,10 +52,10 @@ public class RentalService {
      * @param rentals The list of rentals
      * @return The least expensive rental
      */
-    public static Rental findLeastExpensiveRental(List<Rental> rentals) {
+    public static Optional<Rental> findLeastExpensiveRental(List<Rental> rentals) {
         return rentals
                 .stream()
-                .min(Comparator.comparing(Rental::getPrice)).orElse(null);
+                .min(Comparator.comparing(Rental::getPrice));
     }
 
     /**
@@ -67,9 +68,8 @@ public class RentalService {
     public static List<Rental> findRentalsByCarBrand(String brand, List<Rental> rentals) {
         return rentals.stream()
                 .filter(rental -> {
-                    Vehicle vehicle = rental.getVehicle() instanceof Vehicle v ? v : null;
-                    if (vehicle != null) return vehicle.getBrand().equalsIgnoreCase(brand);
-                    else return false;
+                    Optional<Vehicle> vehicle = rental.getVehicle() instanceof Vehicle v ? Optional.of(v) : Optional.empty();
+                    return vehicle.map(value -> value.getBrand().equalsIgnoreCase(brand)).orElse(false);
                 })
                 .toList();
     }
