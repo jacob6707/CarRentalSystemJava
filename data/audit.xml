@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<auditLogs>
+    <entries>
+        <timestamp>1765293770908</timestamp>
+        <action>Print all rentals</action>
+        <employeeId>1</employeeId>
+    </entries>
+</auditLogs>

@@ -26,7 +26,7 @@ public class AuditRepo {
         AuditLogList logs = findAll();
         logs.getEntries().add(auditLog);
         try {
-            JAXBContext context = JAXBContext.newInstance(AuditLog[].class);
+            JAXBContext context = JAXBContext.newInstance(AuditLogList.class);
             Marshaller marshaller = context.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(logs, AUDIT_PATH.toFile());
@@ -39,7 +39,7 @@ public class AuditRepo {
     public static AuditLogList findAll() {
         if (!Files.exists(AUDIT_PATH)) return new AuditLogList(new ArrayList<>());
         try {
-            JAXBContext context = JAXBContext.newInstance(AuditLog[].class);
+            JAXBContext context = JAXBContext.newInstance(AuditLogList.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             AuditLogList logs = (AuditLogList) unmarshaller.unmarshal(AUDIT_PATH.toFile());
             return logs;

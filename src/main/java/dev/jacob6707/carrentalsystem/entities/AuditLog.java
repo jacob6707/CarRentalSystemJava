@@ -21,15 +21,15 @@ public class AuditLog {
     @XmlElement(name = "action")
     private String action;
 
-    @XmlElement(name = "employee")
-    private Employee employee;
+    @XmlElement(name = "employeeId")
+    private Long employeeId;
 
     public AuditLog() {}
 
     public AuditLog(long timestamp, String action, Employee employee) {
         this.timestamp = timestamp;
         this.action = action;
-        this.employee = employee;
+        this.employeeId = employee.getId();
     }
 
     public long getTimestamp() {
@@ -48,12 +48,12 @@ public class AuditLog {
         this.action = action;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setEmployeeId(Long id) {
+        this.employeeId = id;
     }
 
     @Override
@@ -64,6 +64,6 @@ public class AuditLog {
                         .toLocalDate()
         );
 
-        return "[" + employee + "@" + formattedDate + "] " + action;
+        return "[" + employeeId + "@" + formattedDate + "] " + action;
     }
 }
