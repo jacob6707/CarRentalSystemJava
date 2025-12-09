@@ -4,6 +4,7 @@ import dev.jacob6707.carrentalsystem.entities.*;
 import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
 import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
 import dev.jacob6707.carrentalsystem.repository.AuditRepo;
+import dev.jacob6707.carrentalsystem.repository.BackupRepo;
 import dev.jacob6707.carrentalsystem.repository.JsonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ public class AppService {
         ADD_CUSTOMER("Add a customer to the repository"),
         MAKE_RENTAL("Make a rental"),
         CREATE_BACKUP("Create a backup of the database"),
+        RESTORE_BACKUP("Restore database from backup"),
         PRINT_DATA("Print all data from the database"),
         PRINT_RENTABLE_CARS("Print all rentable cars"),
         PRINT_RENTALS("Print all rentals"),
@@ -76,6 +78,8 @@ public class AppService {
     public static void chooseAction(Scanner sc, Employee employee, JsonRepository<Customer> customersRepository, JsonRepository<Employee> employeeRepository, JsonRepository<Vehicle> vehicleRepository, JsonRepository<Rental> rentalRepository) {
         logger.debug("Processing {} customers, {} employees, {} vehicles, {} rentals", customersRepository.findAll().size(), employeeRepository.findAll().size(), vehicleRepository.findAll().size(), rentalRepository.findAll().size());
 
+        BackupRepo backupRepo = new BackupRepo(List.of(customersRepository, employeeRepository, vehicleRepository, rentalRepository));
+
         Choice choice = Choice.EXIT;
         boolean validChoice = false;
 
@@ -113,7 +117,8 @@ public class AppService {
                 case ADD_EMPLOYEE -> employeeRepository.save(EmployeeService.createEmployee(sc));
                 case ADD_CUSTOMER -> customersRepository.save(CustomerService.generateCustomer(sc));
                 case MAKE_RENTAL -> rentalRepository.save(RentalService.generateRental(sc, customersRepository.findAll(), rentableVehicles));
-                case CREATE_BACKUP -> System.out.println("not yet implemented");
+                case CREATE_BACKUP -> backupRepo.backup();
+                case RESTORE_BACKUP -> backupRepo.restore();
                 case PRINT_DATA -> DataService.printAllRepositories(customersRepository, employeeRepository, vehicleRepository, rentalRepository);
                 case PRINT_RENTABLE_CARS -> CarService.printRentableCarsList(rentableVehicles);
                 case PRINT_RENTALS -> RentalService.printAllRentals(rentalRepository.findAll());

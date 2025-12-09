@@ -1,21 +1,19 @@
 package dev.jacob6707.carrentalsystem.repository;
 
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
 public class BackupRepo {
     public static final Path BACKUP_FILE = Path.of("data/backup.bin");
-    private final List<ArrayListBackedRepository<?>> repositories;
+    private final List<JsonRepository<?>> repositories;
 
-    /**
-     * Creates a new backup repository.
-     *
-     * @param repositories The repositories to backup.
-     */
-    public BackupRepository(List<ArrayListBackedRepository<?>> repositories) {
+    public BackupRepo(List<JsonRepository<?>> repositories) {
         this.repositories = repositories;
     }
 
-    /**
-     * Backs up all repositories to a file.
-     */
     public void backup() {
         if (!Files.exists(BACKUP_FILE.getParent())) {
             try {
@@ -26,7 +24,7 @@ public class BackupRepo {
         }
 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(BACKUP_FILE.toFile()))) {
-            for (ArrayListBackedRepository<?> repository : repositories) {
+            for (JsonRepository<?> repository : repositories) {
                 List<?> entities = repository.findAll();
                 out.writeObject(entities);
             }
@@ -35,14 +33,12 @@ public class BackupRepo {
         }
     }
 
-    // This is slightly unsafe but will not fail
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void restore() {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(BACKUP_FILE.toFile()))) {
-            for (ArrayListBackedRepository<?> repository : repositories) {
+            for (JsonRepository<?> repository : repositories) {
                 repository.clear();
                 List entities = (List) in.readObject();
-                repository.addAll(entities);
+                repository.saveAll(entities);
             }
         } catch (ClassNotFoundException | IOException exception) {
             throw new IllegalStateException("Failed to restore repositories from file: " + BACKUP_FILE, exception);
