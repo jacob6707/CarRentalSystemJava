@@ -1,6 +1,7 @@
 package dev.jacob6707.carrentalsystem.entities;
 
 import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
+import jakarta.json.bind.annotation.JsonbTypeInfo;
 
 import java.math.BigDecimal;
 

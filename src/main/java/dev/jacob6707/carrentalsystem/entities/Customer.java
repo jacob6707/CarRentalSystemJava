@@ -20,8 +20,10 @@ public class Customer extends Person {
         return PersonRole.CUSTOMER;
     }
 
+    public Customer() {}
+
     private Customer(CustomerBuilder builder) {
-        super(builder.firstName, builder.lastName, builder.email, builder.phoneNumber, builder.idNumber, builder.location, builder.dateOfBirth);
+        super(builder.id, builder.firstName, builder.lastName, builder.email, builder.phoneNumber, builder.idNumber, builder.location, builder.dateOfBirth);
         this.discountRate = builder.discountRate;
     }
 
@@ -29,6 +31,7 @@ public class Customer extends Person {
      * Builder for the Customer class.
      */
     public static class CustomerBuilder {
+        private Long id;
         private String firstName;
         private String lastName;
         private String email;
@@ -37,6 +40,11 @@ public class Customer extends Person {
         private Location location;
         private LocalDate dateOfBirth;
         private BigDecimal discountRate = BigDecimal.ZERO;
+
+        public CustomerBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public CustomerBuilder firstName(String firstName) {
             this.firstName = firstName;

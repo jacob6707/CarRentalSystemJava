@@ -25,7 +25,7 @@ public class RentalService {
      */
     public static Rental generateRental(Scanner sc, List<Customer> customers, List<Rentable> rentableCars) {
         Customer customer = CustomerService.selectCustomer(sc, customers);
-        Rentable rentableCar = CarService.selectCar(sc, rentableCars);
+        Vehicle rentableCar = (Vehicle) CarService.selectCar(sc, rentableCars);
         System.out.print("Enter how many days the car will be rented for: ");
         int numOfDays = sc.nextInt();
         sc.nextLine();

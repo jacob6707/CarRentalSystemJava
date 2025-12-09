@@ -1,15 +1,25 @@
 package dev.jacob6707.carrentalsystem.entities;
 
+import jakarta.json.bind.annotation.JsonbSubtype;
+import jakarta.json.bind.annotation.JsonbTypeInfo;
+
 import java.util.Objects;
 
-public abstract class Vehicle {
-    protected final String licensePlate;
-    protected final String brand;
-    protected final String model;
-    protected final int year;
+@JsonbTypeInfo({
+        @JsonbSubtype(alias = "Car", type=Car.class),
+        @JsonbSubtype(alias = "SUV", type=SUV.class)
+})
+public abstract class Vehicle extends Entity {
+    protected String licensePlate;
+    protected String brand;
+    protected String model;
+    protected int year;
     protected int mileage;
 
-    public Vehicle(String licensePlate, String brand, String model, int year, int mileage) {
+    public Vehicle() {}
+
+    public Vehicle(Long id, String licensePlate, String brand, String model, int year, int mileage) {
+        super(id);
         this.licensePlate = licensePlate;
         this.brand = brand;
         this.model = model;
@@ -29,13 +39,28 @@ public abstract class Vehicle {
     public int getYear() {
         return year;
     }
-
     public int getMileage() {
         return mileage;
     }
 
     public void setMileage(int mileage) {
         this.mileage = mileage;
+    }
+
+    public void setLicensePlate(String licensePlate) {
+        this.licensePlate = licensePlate;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     @Override

@@ -3,6 +3,7 @@ package dev.jacob6707.carrentalsystem.services;
 import dev.jacob6707.carrentalsystem.entities.Car;
 import dev.jacob6707.carrentalsystem.entities.Rentable;
 import dev.jacob6707.carrentalsystem.entities.SUV;
+import dev.jacob6707.carrentalsystem.entities.Vehicle;
 import dev.jacob6707.carrentalsystem.exception.InvalidNumericValueException;
 import dev.jacob6707.carrentalsystem.exception.NoRentableFoundException;
 import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -30,11 +32,10 @@ public class CarService {
         System.out.print("Enter car's year of manufacture: ");
         Integer year = sc.nextInt();
         sc.nextLine();
-        System.out.print("Enter car's daily price: ");
         BigDecimal dailyPrice = null;
         while (dailyPrice == null) {
             try {
-                dailyPrice = InputService.readPositiveBigDecimal(sc, "Enter SUV's daily price: ");
+                dailyPrice = InputService.readPositiveBigDecimal(sc, "Enter car's daily price: ");
             } catch (InvalidNumericValueException e) {
                 System.out.println(e.getMessage());
                 System.out.println("Please try again.");

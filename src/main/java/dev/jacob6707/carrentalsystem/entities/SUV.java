@@ -11,11 +11,13 @@ import java.math.BigDecimal;
  * @see Serviceable
  */
 public final class SUV extends Vehicle implements Rentable, Serviceable {
-    private final BigDecimal dailyPrice;
+    private BigDecimal dailyPrice;
     private Boolean available;
 
+    public SUV() {}
+
     private SUV(SUVBuilder builder) {
-        super(builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
+        super(builder.id, builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
         this.dailyPrice = builder.dailyPrice;
         this.available = builder.available;
     }
@@ -35,6 +37,7 @@ public final class SUV extends Vehicle implements Rentable, Serviceable {
      * Builds a {@link SUV} object when {@link #build()} is called.
      */
     public static class SUVBuilder {
+        private Long id;
         private String licensePlate;
         private String brand;
         private String model;
@@ -42,6 +45,11 @@ public final class SUV extends Vehicle implements Rentable, Serviceable {
         private Integer mileage = 0;
         private BigDecimal dailyPrice = BigDecimal.ZERO;
         private Boolean available = true;
+
+        public SUVBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public SUVBuilder licensePlate(String licensePlate) {
             this.licensePlate = licensePlate;
@@ -85,6 +93,14 @@ public final class SUV extends Vehicle implements Rentable, Serviceable {
         public SUV build() {
             return new SUV(this);
         }
+    }
+
+    public void setDailyPrice(BigDecimal dailyPrice) {
+        this.dailyPrice = dailyPrice;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public BigDecimal getDailyPrice() {

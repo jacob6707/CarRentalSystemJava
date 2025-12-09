@@ -2,6 +2,7 @@ package dev.jacob6707.carrentalsystem.entities;
 
 import dev.jacob6707.carrentalsystem.exception.VehicleBookingException;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -11,12 +12,14 @@ import java.math.BigDecimal;
  * @see Rentable
  * @see Serviceable
  */
-public final class Car extends Vehicle implements Rentable, Serviceable {
-    private final BigDecimal dailyPrice;
+public final class Car extends Vehicle implements Rentable, Serviceable, Serializable {
+    private BigDecimal dailyPrice;
     private Boolean available;
 
+    public Car() {}
+
     private Car(CarBuilder builder) {
-        super(builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
+        super(builder.id, builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
         this.dailyPrice = builder.dailyPrice;
         this.available = builder.available;
     }
@@ -36,6 +39,7 @@ public final class Car extends Vehicle implements Rentable, Serviceable {
      * Builds a {@link Car} object when {@link #build()} is called.
      */
     public static class CarBuilder {
+        private Long id;
         private String licensePlate;
         private String brand;
         private String model;
@@ -43,6 +47,11 @@ public final class Car extends Vehicle implements Rentable, Serviceable {
         private Integer mileage = 0;
         private BigDecimal dailyPrice = BigDecimal.ZERO;
         private Boolean available = true;
+
+        public CarBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public CarBuilder licensePlate(String licensePlate) {
             this.licensePlate = licensePlate;
@@ -86,6 +95,14 @@ public final class Car extends Vehicle implements Rentable, Serviceable {
         public Car build() {
             return new Car(this);
         }
+    }
+
+    public void setDailyPrice(BigDecimal dailyPrice) {
+        this.dailyPrice = dailyPrice;
+    }
+
+    public void setAvailable(Boolean available) {
+        this.available = available;
     }
 
     public BigDecimal getDailyPrice() {

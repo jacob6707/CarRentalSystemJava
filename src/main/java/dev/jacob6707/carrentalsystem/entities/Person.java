@@ -1,12 +1,19 @@
 package dev.jacob6707.carrentalsystem.entities;
 
+import jakarta.json.bind.annotation.JsonbSubtype;
+import jakarta.json.bind.annotation.JsonbTypeInfo;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 /**
  * Abstract class that represents a person.
  */
-public abstract class Person {
+@JsonbTypeInfo({
+        @JsonbSubtype(alias = "Customer", type=Customer.class),
+        @JsonbSubtype(alias = "Employee", type=Employee.class)
+})
+public abstract class Person extends Entity {
     protected String firstName;
     protected String lastName;
     protected String email;
@@ -15,7 +22,10 @@ public abstract class Person {
     protected Location location;
     protected LocalDate dateOfBirth;
 
-    public Person(String firstName, String lastName, String email, String phoneNumber, String idNumber, Location location, LocalDate dateOfBirth) {
+    public Person() {}
+
+    public Person(Long id, String firstName, String lastName, String email, String phoneNumber, String idNumber, Location location, LocalDate dateOfBirth) {
+        super(id);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

@@ -9,8 +9,10 @@ import java.time.LocalDate;
 public class Employee extends Person {
     private BigDecimal salary;
 
+    public Employee() {}
+
     private Employee(EmployeeBuilder builder) {
-        super(builder.firstName, builder.lastName, builder.email, builder.phoneNumber, builder.idNumber, builder.location, builder.dateOfBirth);
+        super(builder.id, builder.firstName, builder.lastName, builder.email, builder.phoneNumber, builder.idNumber, builder.location, builder.dateOfBirth);
         this.salary = builder.salary;
     }
 
@@ -18,6 +20,7 @@ public class Employee extends Person {
      * Builder for the Employee class.
      */
     public static class EmployeeBuilder {
+        private Long id;
         private String firstName;
         private String lastName;
         private String email;
@@ -26,6 +29,11 @@ public class Employee extends Person {
         private Location location;
         private LocalDate dateOfBirth;
         private BigDecimal salary;
+
+        public EmployeeBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
 
         public EmployeeBuilder firstName(String firstName) {
             this.firstName = firstName;

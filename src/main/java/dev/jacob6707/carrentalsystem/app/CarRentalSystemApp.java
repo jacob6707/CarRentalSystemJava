@@ -30,50 +30,7 @@ public class CarRentalSystemApp {
 
         System.out.println("Car Rental System");
 
-        Employee employee = null;
-        boolean employeeCreated = false;
-
-        while (!employeeCreated) {
-            try {
-                logger.debug("Starting employee information collection");
-                System.out.println("Insert information of the first employee:");
-
-                System.out.print("First Name: ");
-                String employeeFirstName = sc.nextLine();
-                logger.trace("Employee first name: {}", employeeFirstName);
-
-                System.out.print("Last Name: ");
-                String employeeLastName = sc.nextLine();
-                logger.trace("Employee last name: {}", employeeLastName);
-
-                System.out.print("Email: ");
-                String employeeEmail = sc.nextLine();
-                logger.trace("Employee email: {}", employeeEmail);
-
-                LocalDate dateOfBirth = InputService.readValidatedDate(sc, "Date of birth (dd.MM.yyyy): ", "dd.MM.yyyy");
-
-                BigDecimal employeeSalary = InputService.readPositiveBigDecimal(sc, "Salary: ");
-
-                employee = new Employee.EmployeeBuilder()
-                        .firstName(employeeFirstName)
-                        .lastName(employeeLastName)
-                        .email(employeeEmail)
-                        .dateOfBirth(dateOfBirth)
-                        .salary(employeeSalary)
-                        .build();
-
-                employeeCreated = true;
-                logger.info("Employee created successfully: {} {}", employeeFirstName, employeeLastName);
-            } catch (InvalidDateFormatException | InvalidNumericValueException e) {
-                logger.warn("Error creating employee: {}", e.getMessage());
-                System.out.println("Error: " + e.getMessage());
-                System.out.println("Please try again.\n");
-            } catch (NegativeValueException e) {
-                logger.warn("Negative value error: {}", e.getMessage());
-                System.out.println("Error: " + e.getMessage());
-                System.out.println("Please try again.\n");
-            }
-        }
+        Employee employee = EmployeeService.createEmployee(sc);
 
         try {
             logger.debug("Starting data collection for system entities");
@@ -125,7 +82,7 @@ public class CarRentalSystemApp {
 
             String confirmation;
             do {
-                AppService.chooseAction(sc, people, rentables, rentals);
+                //AppService.chooseAction(sc, people, rentables, rentals);
 
                 System.out.print("Do you want to continue (Y/N)? ");
                 confirmation = sc.nextLine();

@@ -1,5 +1,7 @@
 package dev.jacob6707.carrentalsystem.entities;
 
+import jakarta.json.bind.annotation.JsonbProperty;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,23 +9,26 @@ import java.time.LocalDateTime;
 /**
  * Class that represents a rental.
  */
-public class Rental {
+public class Rental extends Entity {
     private Customer customer;
-    private Rentable car;
+    @JsonbProperty("rentedVehicle")
+    private Vehicle vehicle;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+
+    public Rental() {}
 
     /**
      * Constructs a new rental.
      *
      * @param customer The customer that rented the car
-     * @param car The rented car
+     * @param vehicle The rented car
      * @param startDate The start date of the rental
      * @param endDate The end date of the rental
      */
-    public Rental(Customer customer, Rentable car, LocalDateTime startDate, LocalDateTime endDate) {
+    public Rental(Customer customer, Vehicle vehicle, LocalDateTime startDate, LocalDateTime endDate) {
         this.customer = customer;
-        this.car = car;
+        this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -36,12 +41,12 @@ public class Rental {
         this.customer = customer;
     }
 
-    public Rentable getVehicle() {
-        return car;
+    public Vehicle getVehicle() {
+        return vehicle;
     }
 
-    public void setCar(Rentable car) {
-        this.car = car;
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
     public LocalDateTime getStartDate() {
@@ -62,7 +67,10 @@ public class Rental {
 
     public BigDecimal getPrice() {
         BigDecimal days = BigDecimal.valueOf(Duration.between(this.startDate, this.endDate).toDays());
-        return car.getDailyPrice().multiply(days);
+        if (vehicle instanceof Rentable r) {
+            return days.multiply(r.getDailyPrice());
+        }
+        return BigDecimal.ZERO;
     }
 
     /**
