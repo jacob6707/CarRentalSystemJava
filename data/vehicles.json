@@ -1,0 +1,90 @@
+[
+    {
+        "@type": "Car",
+        "id": 1,
+        "brand": "Toyota",
+        "licensePlate": "ZG1234AB",
+        "mileage": 0,
+        "model": "Camry",
+        "year": 2022,
+        "available": true,
+        "dailyPrice": 45.00
+    },
+    {
+        "@type": "Car",
+        "id": 3,
+        "brand": "Ford",
+        "licensePlate": "ZG9012EF",
+        "mileage": 0,
+        "model": "Mustang",
+        "year": 2023,
+        "available": true,
+        "dailyPrice": 75.00
+    },
+    {
+        "@type": "Car",
+        "id": 4,
+        "brand": "Chevrolet",
+        "licensePlate": "ZG3456GH",
+        "mileage": 0,
+        "model": "Malibu",
+        "year": 2020,
+        "available": true,
+        "dailyPrice": 35.00
+    },
+    {
+        "@type": "Car",
+        "id": 5,
+        "brand": "Nissan",
+        "licensePlate": "ZG7890IJ",
+        "mileage": 0,
+        "model": "Altima",
+        "year": 2022,
+        "available": true,
+        "dailyPrice": 42.00
+    },
+    {
+        "@type": "SUV",
+        "id": 6,
+        "brand": "Jeep",
+        "licensePlate": "ZG1122KL",
+        "mileage": 0,
+        "model": "Grand Cherokee",
+        "year": 2023,
+        "available": true,
+        "dailyPrice": 85.00
+    },
+    {
+        "@type": "SUV",
+        "id": 7,
+        "brand": "Toyota",
+        "licensePlate": "ZG3344MN",
+        "mileage": 0,
+        "model": "RAV4",
+        "year": 2022,
+        "available": true,
+        "dailyPrice": 65.00
+    },
+    {
+        "@type": "SUV",
+        "id": 8,
+        "brand": "Honda",
+        "licensePlate": "ZG5566OP",
+        "mileage": 0,
+        "model": "CR-V",
+        "year": 2021,
+        "available": true,
+        "dailyPrice": 60.00
+    },
+    {
+        "@type": "Car",
+        "id": 2,
+        "brand": "Honda",
+        "licensePlate": "ZG5678CD",
+        "mileage": 0,
+        "model": "Civic",
+        "year": 2021,
+        "available": false,
+        "dailyPrice": 40.00
+    }
+]

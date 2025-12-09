@@ -1,0 +1,12 @@
+[
+    {
+        "@type": "Employee",
+        "id": 1,
+        "dateOfBirth": "2005-10-05",
+        "email": "jrobic@tvz.hr",
+        "firstName": "Jakov",
+        "lastName": "Robic",
+        "role": "EMPLOYEE",
+        "salary": 3500
+    }
+]

@@ -1,0 +1,52 @@
+[
+    {
+        "@type": "Customer",
+        "id": 1,
+        "dateOfBirth": "1995-07-22",
+        "email": "emily.johnson@email.com",
+        "firstName": "Emily",
+        "lastName": "Johnson",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    },
+    {
+        "@type": "Customer",
+        "id": 2,
+        "dateOfBirth": "1988-11-08",
+        "email": "michael.williams@email.com",
+        "firstName": "Michael",
+        "lastName": "Williams",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    },
+    {
+        "@type": "Customer",
+        "id": 3,
+        "dateOfBirth": "1992-05-30",
+        "email": "sarah.brown@email.com",
+        "firstName": "Sarah",
+        "lastName": "Brown",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    },
+    {
+        "@type": "Customer",
+        "id": 4,
+        "dateOfBirth": "1985-09-14",
+        "email": "david.davis@email.com",
+        "firstName": "David",
+        "lastName": "Davis",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    },
+    {
+        "@type": "Customer",
+        "id": 5,
+        "dateOfBirth": "1998-12-25",
+        "email": "jessica.martinez@email.com",
+        "firstName": "Jessica",
+        "lastName": "Martinez",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    }
+]

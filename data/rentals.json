@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "customer": {
+            "@type": "Customer",
+            "id": 3,
+            "dateOfBirth": "1992-05-30",
+            "email": "sarah.brown@email.com",
+            "firstName": "Sarah",
+            "lastName": "Brown",
+            "discountRate": 0,
+            "role": "CUSTOMER"
+        },
+        "endDate": "2025-12-15T15:01:41.6051225",
+        "price": 240.00,
+        "rentedVehicle": {
+            "@type": "Car",
+            "id": 2,
+            "brand": "Honda",
+            "licensePlate": "ZG5678CD",
+            "mileage": 0,
+            "model": "Civic",
+            "year": 2021,
+            "available": false,
+            "dailyPrice": 40.00
+        },
+        "startDate": "2025-12-09T15:01:41.6051225"
+    }
+]
