@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.jacob6707.carrentalsystemjavafx.controller.AddVehicleController">
+   <center>
+      <VBox alignment="TOP_CENTER" spacing="8.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Add a New Vehicle" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <GridPane hgap="8.0" vgap="8.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Vehicle Type" GridPane.halignment="RIGHT" />
+                  <Label text="Brand" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                  <Label text="Model" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                  <Label text="Year of Manufacture" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                  <Label text="Current Mileage" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
+                  <Label text="License Plate" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
+                  <Label text="Price per day" GridPane.halignment="RIGHT" GridPane.rowIndex="6" />
+                  <ComboBox fx:id="addVehicleTypeComboBox" editable="true" prefWidth="150.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="addVehicleBrandTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="addVehicleModelTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Spinner fx:id="addVehicleYearSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <Spinner fx:id="addVehicleMileageSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <TextField fx:id="addVehicleLicensePlateTextField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                  <Spinner fx:id="addVehiclePriceSpinner" editable="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+               </children>
+            </GridPane>
+            <Button fx:id="addVehicleButton" mnemonicParsing="false" onAction="#addVehicleAction" text="Add" />
+         </children>
+         <padding>
+            <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+         </padding>
+      </VBox>
+   </center>
+</BorderPane>

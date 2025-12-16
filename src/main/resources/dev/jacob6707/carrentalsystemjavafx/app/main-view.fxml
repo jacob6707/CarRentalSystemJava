@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <tabs>
+          <Tab closable="false" text="All Vehicles">
+               <content>
+                  <fx:include source="vehicles-tab.fxml" />
+               </content>
+            </Tab>
+          <Tab closable="false" text="Customers">
+               <content>
+                  <fx:include source="customers-tab.fxml" />
+               </content></Tab>
+            <Tab text="Rentals">
+               <content>
+                  <fx:include source="rentals-tab.fxml" />
+               </content></Tab>
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>

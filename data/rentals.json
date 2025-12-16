@@ -1,0 +1,90 @@
+[
+    {
+        "createdAt": "2025-12-16T14:10:56.3926325",
+        "id": "806e24ba-9c54-45c6-8051-d5238091f7eb",
+        "updatedAt": "2025-12-16T14:10:56.3926325",
+        "customer": {
+            "@type": "Customer",
+            "createdAt": "2025-12-16T01:50:15.7647436",
+            "id": "395f587c-88f9-4034-9938-099d705861be",
+            "updatedAt": "2025-12-16T01:50:15.7647436",
+            "dateOfBirth": "1995-07-22",
+            "email": "emily.johnson@gmail.com",
+            "firstName": "Emily",
+            "fullName": "Emily Johnson",
+            "idNumber": "23978523789",
+            "lastName": "Johnson",
+            "location": {
+                "address": "Coral Cove 5",
+                "city": "New York",
+                "country": "USA",
+                "getFullAddress": "Coral Cove 5, 72374 New York, New York City, USA",
+                "postalCode": "72374",
+                "state": "New York City"
+            },
+            "phoneNumber": "+31852848342",
+            "discountRate": 0,
+            "role": "CUSTOMER"
+        },
+        "endDate": "2025-12-23T14:10:56.3716326",
+        "price": 0,
+        "rentedVehicle": {
+            "@type": "Car",
+            "createdAt": "2025-12-15T22:55:33.8281913",
+            "id": "cc481138-59c5-4e98-97d3-7262b4c68548",
+            "updatedAt": "2025-12-15T22:55:33.8281913",
+            "brand": "Toyota",
+            "licensePlate": "ZG1234AB",
+            "mileage": 6735,
+            "model": "Camry",
+            "year": 2022,
+            "available": true,
+            "dailyPrice": 0
+        },
+        "startDate": "2025-12-16T14:10:56.3716326"
+    },
+    {
+        "createdAt": "2025-12-16T14:13:08.9220123",
+        "id": "069760f1-44c3-4e69-ae5d-993afbc4f7cd",
+        "updatedAt": "2025-12-16T14:13:08.9220123",
+        "customer": {
+            "@type": "Customer",
+            "createdAt": "2025-12-16T01:50:15.7647436",
+            "id": "395f587c-88f9-4034-9938-099d705861be",
+            "updatedAt": "2025-12-16T01:50:15.7647436",
+            "dateOfBirth": "1995-07-22",
+            "email": "emily.johnson@gmail.com",
+            "firstName": "Emily",
+            "fullName": "Emily Johnson",
+            "idNumber": "23978523789",
+            "lastName": "Johnson",
+            "location": {
+                "address": "Coral Cove 5",
+                "city": "New York",
+                "country": "USA",
+                "getFullAddress": "Coral Cove 5, 72374 New York, New York City, USA",
+                "postalCode": "72374",
+                "state": "New York City"
+            },
+            "phoneNumber": "+31852848342",
+            "discountRate": 0,
+            "role": "CUSTOMER"
+        },
+        "endDate": "2025-12-23T14:13:08.8990111",
+        "price": 245.0,
+        "rentedVehicle": {
+            "@type": "Car",
+            "createdAt": "2025-12-16T01:01:28.1407195",
+            "id": "250d99e3-630a-4b62-923c-e913f1d8fc42",
+            "updatedAt": "2025-12-16T01:01:28.1407195",
+            "brand": "Chevrolet",
+            "licensePlate": "ZG3456GH",
+            "mileage": 32785,
+            "model": "Malibu",
+            "year": 2020,
+            "available": true,
+            "dailyPrice": 35.0
+        },
+        "startDate": "2025-12-16T14:13:08.8990111"
+    }
+]

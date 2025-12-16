@@ -1,0 +1,54 @@
+[
+    {
+        "@type": "Car",
+        "createdAt": "2025-12-15T22:55:33.8281913",
+        "id": "cc481138-59c5-4e98-97d3-7262b4c68548",
+        "updatedAt": "2025-12-15T22:55:33.8281913",
+        "brand": "Toyota",
+        "licensePlate": "ZG1234AB",
+        "mileage": 6735,
+        "model": "Camry",
+        "year": 2022,
+        "available": true,
+        "dailyPrice": 0
+    },
+    {
+        "@type": "Car",
+        "createdAt": "2025-12-15T22:55:33.8995588",
+        "id": "6ada4300-4032-4398-8964-7f9210d2bafb",
+        "updatedAt": "2025-12-15T22:55:33.8995588",
+        "brand": "Ford",
+        "licensePlate": "ZG9012EF",
+        "mileage": 9856,
+        "model": "Mustang",
+        "year": 2023,
+        "available": true,
+        "dailyPrice": 0
+    },
+    {
+        "@type": "SUV",
+        "createdAt": "2025-12-15T22:55:33.901559",
+        "id": "5778aa7c-2480-4811-996b-dc4fc523d104",
+        "updatedAt": "2025-12-15T22:55:33.901559",
+        "brand": "Toyota",
+        "licensePlate": "ZG3344MN",
+        "mileage": 17523,
+        "model": "RAV4",
+        "year": 2022,
+        "available": true,
+        "dailyPrice": 0
+    },
+    {
+        "@type": "Car",
+        "createdAt": "2025-12-16T01:01:28.1407195",
+        "id": "250d99e3-630a-4b62-923c-e913f1d8fc42",
+        "updatedAt": "2025-12-16T01:01:28.1407195",
+        "brand": "Chevrolet",
+        "licensePlate": "ZG3456GH",
+        "mileage": 32785,
+        "model": "Malibu",
+        "year": 2020,
+        "available": true,
+        "dailyPrice": 35.0
+    }
+]

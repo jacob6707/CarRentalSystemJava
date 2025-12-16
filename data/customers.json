@@ -1,0 +1,24 @@
+[
+    {
+        "@type": "Customer",
+        "createdAt": "2025-12-16T01:50:15.7647436",
+        "id": "395f587c-88f9-4034-9938-099d705861be",
+        "updatedAt": "2025-12-16T01:50:15.7647436",
+        "dateOfBirth": "1995-07-22",
+        "email": "emily.johnson@gmail.com",
+        "firstName": "Emily",
+        "idNumber": "23978523789",
+        "lastName": "Johnson",
+        "location": {
+            "address": "Coral Cove 5",
+            "city": "New York",
+            "country": "USA",
+            "getFullAddress": "Coral Cove 5, 72374 New York, New York City, USA",
+            "postalCode": "72374",
+            "state": "New York City"
+        },
+        "phoneNumber": "+31852848342",
+        "discountRate": 0,
+        "role": "CUSTOMER"
+    }
+]
