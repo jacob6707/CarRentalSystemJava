@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Class that represents a customer.
+ * Represents a customer.
  */
 public class Customer extends Person {
 

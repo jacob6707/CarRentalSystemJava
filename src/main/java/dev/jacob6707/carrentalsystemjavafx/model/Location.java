@@ -1,7 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.model;
 
 /**
- * Class that represents a location.
+ * Represents a location.
  * @param address Address line
  * @param city City
  * @param state State
@@ -17,6 +17,10 @@ public record Location(String address, String city, String state, String postalC
         return address + ", " + postalCode + " " + city + ", " + state + ", " + country;
     }
 
+    /**
+     * Returns the full address of the location.
+     * @return The full address (address, postal code, city, state, country)
+     */
     @Override
     public String toString() {
         return getFullAddress();

@@ -10,6 +10,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+/**
+ * Represents a rental.
+ */
 public class Rental extends Entity {
     private Customer customer;
     @JsonbProperty("rentedVehicle")
@@ -35,38 +38,74 @@ public class Rental extends Entity {
         this.endDate = endDate;
     }
 
+    /**
+     * Gets the customer that rented the car.
+     * @return customer
+     */
     public Customer getCustomer() {
         return customer;
     }
 
+    /**
+     * Sets the customer that rented the car.
+     * @param customer customer
+     */
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
 
+    /**
+     * Gets the rented vehicle.
+     * @return rented vehicle
+     */
     public Vehicle getVehicle() {
         return vehicle;
     }
 
+    /**
+     * Sets the rented vehicle.
+     * @param vehicle rented vehicle
+     */
     public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 
+    /**
+     * Gets the start date of the rental.
+     * @return start date
+     */
     public LocalDateTime getStartDate() {
         return startDate;
     }
 
+    /**
+     * Sets the start date of the rental.
+     * @param startDate start date
+     */
     public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
+    /**
+     * Gets the end date of the rental.
+     * @return end date
+     */
     public LocalDateTime getEndDate() {
         return endDate;
     }
 
+    /**
+     * Sets the end date of the rental.
+     * @param endDate end date
+     */
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
+    /**
+     * Gets the price of the rental.
+     * @return calculated price
+     */
     public BigDecimal getPrice() {
         BigDecimal days = BigDecimal.valueOf(Duration.between(this.startDate, this.endDate).toDays());
         if (vehicle instanceof Rentable r) {

@@ -19,6 +19,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Controller for the Vehicles tab.
+ */
 public class VehiclesTabController {
     @FXML
     private Button vehicleAddButton;
@@ -53,6 +56,9 @@ public class VehiclesTabController {
     private final VehiclesRepository vehiclesRepository = VehiclesRepository.getInstance();
     private static final Logger log = LoggerFactory.getLogger(VehiclesTabController.class);
 
+    /**
+     * Initializes table columns and populates vehicle data
+     */
     @FXML
     void initialize() {
         vehicleIdColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getId().toString()));
@@ -67,6 +73,9 @@ public class VehiclesTabController {
         vehiclesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> vehicleDeleteButton.setDisable(newValue == null));
     }
 
+    /**
+     * Searches vehicles; displays results or warning dialog
+     */
     @FXML
     void onVehicleSearchAction() {
         if (vehiclesSearchTextField.getText().isBlank()) {
@@ -81,6 +90,9 @@ public class VehiclesTabController {
         vehiclesTableView.setItems(FXCollections.observableArrayList(filteredVehicles));
     }
 
+    /**
+     * Deletes the selected vehicle.
+     */
     @FXML
     void onVehicleDeleteAction() {
         DialogUtils.showConfirmationDialog("Delete Vehicle", "Are you sure you want to delete this vehicle?", "This action cannot be undone.")
@@ -91,6 +103,9 @@ public class VehiclesTabController {
                 });
     }
 
+    /**
+     * Opens the add vehicle view.
+     */
     @FXML
     void onVehicleAddAction() {
         try {

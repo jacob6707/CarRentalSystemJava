@@ -21,6 +21,9 @@ import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Controller for the Customers tab.
+ */
 public class CustomersTabController {
 
     @FXML
@@ -65,6 +68,9 @@ public class CustomersTabController {
     private final CustomersRepository customersRepository = CustomersRepository.getInstance();
     private static final Logger log = LoggerFactory.getLogger(CustomersTabController.class);
 
+    /**
+     * Initializes table columns and populates customer data
+     */
     @FXML
     void initialize() {
         customerIdColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getId().toString()));
@@ -83,6 +89,10 @@ public class CustomersTabController {
 
     }
 
+    /**
+     * Opens the add customer view.
+     * @param event The event that triggered this method
+     */
     @FXML
     void onCustomerAddAction(ActionEvent event) {
         try {
@@ -100,6 +110,10 @@ public class CustomersTabController {
         }
     }
 
+    /**
+     * Deletes the selected customer.
+     * @param event The event that triggered this method
+     */
     @FXML
     void onCustomerDeleteAction(ActionEvent event) {
         DialogUtils.showConfirmationDialog("Delete Customer", "Are you sure you want to delete this customer?", "This action cannot be undone.")
@@ -110,6 +124,10 @@ public class CustomersTabController {
                 });
     }
 
+    /**
+     * Searches for customers based on the search term.
+     * @param event The event that triggered this method
+     */
     @FXML
     void onCustomerSearchAction(ActionEvent event) {
         if (customersSearchTextField.getText().isBlank()) {

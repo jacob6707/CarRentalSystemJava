@@ -15,6 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Controller for the Add Vehicle screen.
+ */
 public class AddVehicleController {
 
     @FXML
@@ -41,6 +44,10 @@ public class AddVehicleController {
     @FXML
     private Spinner<Integer> addVehicleYearSpinner;
 
+    /**
+     * Handles vehicle creation; persists if input is valid.
+     * @param event The event that triggered this method
+     */
     @FXML
     void addVehicleAction(ActionEvent event) {
         String type = addVehicleTypeComboBox.getValue();
@@ -87,6 +94,9 @@ public class AddVehicleController {
         stage.close();
     }
 
+    /**
+     * Initializes the view.
+     */
     @FXML
     public void initialize() {
         String[] carTypes = {"Car", "SUV"};

@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Class that represents a car.
+ * Represents a car that can be rented.
  */
 public final class Car extends Vehicle implements Rentable {
     private static final Logger log = LoggerFactory.getLogger(Car.class);
@@ -24,6 +24,14 @@ public final class Car extends Vehicle implements Rentable {
         super(builder.id, builder.licensePlate, builder.brand, builder.model, builder.year, builder.mileage);
         this.dailyPrice = builder.dailyPrice;
         this.available = builder.available;
+    }
+
+    /**
+     * Services the car.
+     */
+    @Override
+    public void service() {
+        log.info("Servicing car: {} {}", brand, model);
     }
 
     /**
@@ -99,14 +107,26 @@ public final class Car extends Vehicle implements Rentable {
         }
     }
 
+    /**
+     * Sets the daily price of the car.
+     * @param dailyPrice daily price
+     */
     public void setDailyPrice(BigDecimal dailyPrice) {
         this.dailyPrice = dailyPrice;
     }
 
+    /**
+     * Sets the availability of the car.
+     * @param available availability
+     */
     public void setAvailable(Boolean available) {
         this.available = available;
     }
 
+    /**
+     * Gets the daily price of the car.
+     * @return daily price
+     */
     public BigDecimal getDailyPrice() {
         return dailyPrice;
     }
@@ -144,14 +164,8 @@ public final class Car extends Vehicle implements Rentable {
     }
 
     /**
-     * Services the car.
+     * Implements equality check based on daily price and availability
      */
-    @Override
-    public void service() {
-        log.info("Servicing car: {} {}", brand, model);
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -160,6 +174,10 @@ public final class Car extends Vehicle implements Rentable {
         return Objects.equals(getDailyPrice(), car.getDailyPrice()) && Objects.equals(available, car.available);
     }
 
+    /**
+     * Implements hashcode based on daily price and availability
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getDailyPrice(), available);

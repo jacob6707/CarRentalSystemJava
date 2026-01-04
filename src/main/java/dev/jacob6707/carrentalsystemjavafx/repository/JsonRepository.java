@@ -18,6 +18,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * An abstract implementation of the {@code Repository} interface that persists entities
+ * to a JSON file. This class provides basic CRUD operations and automatically handles
+ * serialization and deserialization of entities.
+ *
+ * @param <T> the type of entities managed by this repository, which must extend {@link Entity}
+ */
 public abstract class JsonRepository<T extends Entity> implements Repository<T> {
     private static final Logger log = LoggerFactory.getLogger(JsonRepository.class);
     private final Path file;
@@ -34,6 +41,11 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         type = null;
     }
 
+    /**
+     * Constructor for JsonRepository.
+     * @param file The path to the JSON file.
+     * @param type The type of entities managed by this repository.
+     */
     protected JsonRepository(Path file, Type type) {
         this.file = file;
         this.type = type;
@@ -41,6 +53,10 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         this.entities = loadEntities();
     }
 
+    /**
+     * Loads all entities from the JSON file.
+     * @return A list of entities.
+     */
     @Override
     public List<T> findAll() {
         if (LocalDateTime.now().minusMinutes(5).isAfter(lastUpdated)) {
@@ -49,11 +65,20 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         return entities;
     }
 
+    /**
+     * Finds an entity by ID.
+     * @param id Entity UUID
+     * @return An optional containing the entity if found, or an empty optional otherwise.
+     */
     @Override
     public Optional<T> findById(UUID id) {
         return findAll().stream().filter(entity -> entity.getId().equals(id)).findFirst();
     }
 
+    /**
+     * Saves an entity to the JSON file.
+     * @param entity The entity to save.
+     */
     @Override
     public void save(T entity) {
         entities = findAll();
@@ -62,11 +87,19 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         writeToFile();
     }
 
+    /**
+     * Deletes an entity from the JSON file.
+     * @param entity The entity to delete.
+     */
     @Override
     public void delete(T entity) {
         deleteById(entity.getId());
     }
 
+    /**
+     * Deletes an entity from the JSON file by ID.
+     * @param id Entity UUID
+     */
     @Override
     public void deleteById(UUID id) {
         entities = findAll();
@@ -75,6 +108,10 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         writeToFile();
     }
 
+    /**
+     * Loads entities from the JSON file.
+     * @return A list of entities.
+     */
     private List<T> loadEntities() {
         if (!Files.exists(file)) {
             log.warn("File {} does not exist", file);
@@ -90,6 +127,9 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
         }
     }
 
+    /**
+     * Writes entities to the JSON file.
+     */
     private void writeToFile() {
         try {
             Files.writeString(file, jsonb.toJson(entities.toArray()));

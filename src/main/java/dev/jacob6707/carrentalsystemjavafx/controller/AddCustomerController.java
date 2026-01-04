@@ -15,6 +15,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.StringTokenizer;
 
+/**
+ * Controller for the Add Customer screen.
+ */
 public class AddCustomerController {
 
     @FXML
@@ -41,6 +44,10 @@ public class AddCustomerController {
     @FXML
     private TextField addCustomerPhoneNumberTextField;
 
+    /**
+     * Handles customer creation; persists if input is valid.
+     * @param event The event that triggered this method
+     */
     @FXML
     void addCustomerAction(ActionEvent event) {
         String firstName = addCustomerFirstNameTextField.getText();
@@ -72,6 +79,10 @@ public class AddCustomerController {
         stage.close();
     }
 
+    /**
+     * Parses location string into address components
+     * @param location The location string
+     */
     private static Location getLocation(String location) {
         StringTokenizer locationTokenizer = new StringTokenizer(location, ",");
         String address = locationTokenizer.nextToken().trim();

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
- * Class that represents an employee.
+ * Represents an employee.
  */
 public class Employee extends Person {
     private BigDecimal salary;

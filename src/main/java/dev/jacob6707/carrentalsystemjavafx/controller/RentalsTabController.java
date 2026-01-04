@@ -14,6 +14,9 @@ import javafx.scene.control.TextField;
 
 import java.util.List;
 
+/**
+ * Controller for the Rentals tab.
+ */
 public class RentalsTabController {
 
     @FXML
@@ -42,6 +45,9 @@ public class RentalsTabController {
 
     private final RentalsRepository rentalsRepository = RentalsRepository.getInstance();
 
+    /**
+     * Initializes table columns and populates rental data
+     */
     @FXML
     void initialize() {
         rentalIdColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getId().toString()));
@@ -54,6 +60,9 @@ public class RentalsTabController {
         rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
     }
 
+    /**
+     * Searches rentals; displays results or warning
+     */
     @FXML
     void onRentalSearchAction() {
         if (rentalsSearchTextField.getText().isBlank()) {

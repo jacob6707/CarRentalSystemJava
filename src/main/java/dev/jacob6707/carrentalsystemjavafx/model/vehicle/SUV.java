@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Class that represents an SUV.
+ * Represents an SUV that can be rented.
  */
 public final class SUV extends Vehicle implements Rentable {
     private static final Logger log = LoggerFactory.getLogger(SUV.class);
@@ -99,14 +99,26 @@ public final class SUV extends Vehicle implements Rentable {
         }
     }
 
+    /**
+     * Sets the daily price of the SUV.
+     * @param dailyPrice daily price
+     */
     public void setDailyPrice(BigDecimal dailyPrice) {
         this.dailyPrice = dailyPrice;
     }
 
+    /**
+     * Sets the availability of the SUV.
+     * @param available availability
+     */
     public void setAvailable(Boolean available) {
         this.available = available;
     }
 
+    /**
+     * Gets the daily price of the SUV.
+     * @return daily price
+     */
     public BigDecimal getDailyPrice() {
         return dailyPrice;
     }
@@ -148,6 +160,11 @@ public final class SUV extends Vehicle implements Rentable {
         log.info("Servicing SUV: {} {}",brand, model);
     }
 
+    /**
+     * Implements equality check based on daily price and availability
+     * @param o object to compare to
+     * @return true if equal, false if not
+     */
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -156,6 +173,10 @@ public final class SUV extends Vehicle implements Rentable {
         return Objects.equals(getDailyPrice(), suv.getDailyPrice()) && Objects.equals(available, suv.available);
     }
 
+    /**
+     * Implements hashcode based on daily price and availability
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getDailyPrice(), available);

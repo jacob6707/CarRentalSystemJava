@@ -6,13 +6,25 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * Utility class for handling vehicles.
+ */
 public class VehicleUtils {
     private VehicleUtils() {}
 
+    /**
+     * Searches for vehicles based on the search term.
+     * @param vehicles The list of vehicles to search through
+     * @param searchTerm The search term
+     * @return A list of vehicles that match the search term
+     */
     public static List<Vehicle> searchVehicles(List<Vehicle> vehicles, String searchTerm) {
         return vehicles.stream().filter(vehicleFilter(searchTerm)).toList();
     }
 
+    /**
+     * Builds case‑insensitive predicate matching vehicle properties
+     */
     public static Predicate<Vehicle> vehicleFilter(String searchTerm) {
         return vehicle ->
                 vehicle.getBrand().toLowerCase().contains(searchTerm.toLowerCase())
@@ -23,6 +35,9 @@ public class VehicleUtils {
                         || vehicle.getId().toString().toLowerCase().contains(searchTerm.toLowerCase());
     }
 
+    /**
+     * Validates vehicle input criteria are satisfied
+     */
     public static boolean validateInput(String type, String brand, String model, String licensePlate, Integer year, Integer mileage, BigDecimal dailyPrice) {
         if (type == null || brand == null || model == null || licensePlate == null || year == null || mileage == null || dailyPrice == null) { return false; }
         if (type.isBlank() || brand.isBlank() || model.isBlank() || licensePlate.isBlank() || year.equals(0) || mileage.equals(0) || dailyPrice.equals(BigDecimal.ZERO)) { return false; }
