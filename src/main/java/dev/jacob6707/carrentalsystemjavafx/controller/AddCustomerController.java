@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +46,8 @@ public class AddCustomerController {
     @FXML
     private TextField addCustomerPhoneNumberTextField;
 
+    private static final Logger log = LoggerFactory.getLogger(AddCustomerController.class);
+
     /**
      * Handles customer creation; persists if input is valid.
      * @param event The event that triggered this method
@@ -59,13 +63,14 @@ public class AddCustomerController {
         String dateOfBirth = addCustomerDateOfBirthTextField.getText();
 
         if (!CustomerUtils.validateInput(firstName, lastName, email, phoneNumber, idNumber, location, dateOfBirth)) {
+            log.warn("Invalid input for customer creation: {}, {}, {}, {}, {}, {}, {}", firstName, lastName, email, phoneNumber, idNumber, location, dateOfBirth);
             DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
             return;
         }
 
         Location location1 = getLocation(location);
 
-        CustomersRepository.getInstance().save(new Customer.CustomerBuilder()
+        Customer newCustomer = new Customer.CustomerBuilder()
                 .firstName(firstName)
                 .lastName(lastName)
                 .email(email)
@@ -73,7 +78,11 @@ public class AddCustomerController {
                 .idNumber(idNumber)
                 .location(location1)
                 .dateOfBirth(LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd.MM.yyyy")))
-                .build());
+                .build();
+
+        CustomersRepository.getInstance().save(newCustomer);
+
+        log.info("Customer created: {}", newCustomer);
 
         Stage stage = (Stage) addCustomerButton.getScene().getWindow();
         stage.close();

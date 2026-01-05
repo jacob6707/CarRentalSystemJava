@@ -95,12 +95,15 @@ public class VehiclesTabController {
      */
     @FXML
     void onVehicleDeleteAction() {
+        if (vehiclesTableView.getSelectionModel().getSelectedItem() == null) return;
+        Vehicle vehicleToDelete = vehiclesTableView.getSelectionModel().getSelectedItem();
         DialogUtils.showConfirmationDialog("Delete Vehicle", "Are you sure you want to delete this vehicle?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> {
-                    vehiclesRepository.deleteById(vehiclesTableView.getSelectionModel().getSelectedItem().getId());
+                    vehiclesRepository.deleteById(vehicleToDelete.getId());
                     vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
                 });
+        log.info("Vehicle deleted successfully: {}", vehicleToDelete);
     }
 
     /**

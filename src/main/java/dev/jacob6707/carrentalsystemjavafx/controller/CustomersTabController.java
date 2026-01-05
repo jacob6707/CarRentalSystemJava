@@ -116,12 +116,15 @@ public class CustomersTabController {
      */
     @FXML
     void onCustomerDeleteAction(ActionEvent event) {
+        if (customersTableView.getSelectionModel().getSelectedItem() == null) return;
+        Customer customerToDelete = customersTableView.getSelectionModel().getSelectedItem();
         DialogUtils.showConfirmationDialog("Delete Customer", "Are you sure you want to delete this customer?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(response -> {
-                    customersRepository.deleteById(customersTableView.getSelectionModel().getSelectedItem().getId());
+                    customersRepository.deleteById(customerToDelete.getId());
                     customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
                 });
+        log.info("Customer deleted successfully: {}", customerToDelete);
     }
 
     /**

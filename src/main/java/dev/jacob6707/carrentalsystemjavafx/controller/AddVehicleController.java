@@ -10,6 +10,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,6 +46,8 @@ public class AddVehicleController {
     @FXML
     private Spinner<Integer> addVehicleYearSpinner;
 
+    private static final Logger log = LoggerFactory.getLogger(AddVehicleController.class);
+
     /**
      * Handles vehicle creation; persists if input is valid.
      * @param event The event that triggered this method
@@ -59,15 +63,13 @@ public class AddVehicleController {
         BigDecimal dailyPrice = BigDecimal.valueOf(addVehiclePriceSpinner.getValue());
 
         if (!VehicleUtils.validateInput(type, brand, model, licensePlate, year, mileage, dailyPrice)) {
+            log.warn("Invalid vehicle input: {}, {}, {}, {}, {}, {}, {}", type, brand, model, licensePlate, year, mileage, dailyPrice);
             DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
             return;
         }
 
         switch (type) {
-            case "SUV" ->
-                    DialogUtils.showConfirmationDialog("Add SUV", "Are you sure you want to add this SUV?", "This action cannot be undone.")
-                            .filter(response -> response == ButtonType.OK)
-                            .ifPresent(response -> VehiclesRepository.getInstance().save(new SUV.SUVBuilder()
+            case "SUV" -> VehiclesRepository.getInstance().save(new SUV.SUVBuilder()
                                     .id(UUID.randomUUID())
                                     .brand(brand)
                                     .model(model)
@@ -75,10 +77,8 @@ public class AddVehicleController {
                                     .mileage(mileage)
                                     .year(year)
                                     .dailyPrice(dailyPrice)
-                                    .build()));
-            case "Car" -> DialogUtils.showConfirmationDialog("Add Car", "Are you sure you want to add this Car?", "This action cannot be undone.")
-                    .filter(response -> response == ButtonType.OK)
-                    .ifPresent(response -> VehiclesRepository.getInstance().save(new Car.CarBuilder()
+                                    .build());
+            case "Car" -> VehiclesRepository.getInstance().save(new Car.CarBuilder()
                             .id(UUID.randomUUID())
                             .brand(brand)
                             .model(model)
@@ -86,9 +86,11 @@ public class AddVehicleController {
                             .mileage(mileage)
                             .year(year)
                             .dailyPrice(dailyPrice)
-                            .build()));
+                            .build());
             default -> DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
         }
+
+        log.info("Vehicle added successfully: {}", VehiclesRepository.getInstance().findAll().getLast());
 
         Stage stage = (Stage) addVehicleButton.getScene().getWindow();
         stage.close();

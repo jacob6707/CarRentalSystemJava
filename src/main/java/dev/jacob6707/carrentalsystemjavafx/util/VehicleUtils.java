@@ -1,5 +1,6 @@
 package dev.jacob6707.carrentalsystemjavafx.util;
 
+import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
 import dev.jacob6707.carrentalsystemjavafx.model.vehicle.Vehicle;
 
 import java.math.BigDecimal;
@@ -20,6 +21,18 @@ public class VehicleUtils {
      */
     public static List<Vehicle> searchVehicles(List<Vehicle> vehicles, String searchTerm) {
         return vehicles.stream().filter(vehicleFilter(searchTerm)).toList();
+    }
+
+    /**
+     * Filters vehicles to only include available vehicles by searching through a list of active rentals and filtering any vehicle present in them.
+     *
+     * @param vehicles The list of vehicles to filter
+     * @param rentals The list of rentals
+     * @return An immutable list of available vehicles
+     */
+    public static List<Vehicle> getAvailableVehicles(List<Vehicle> vehicles, List<Rental> rentals) {
+        List<Vehicle> currentlyRentedVehicles = RentalUtils.getActiveRentals(rentals).stream().map(Rental::getVehicle).toList();
+        return vehicles.stream().filter(vehicle -> !currentlyRentedVehicles.contains(vehicle)).toList();
     }
 
     /**

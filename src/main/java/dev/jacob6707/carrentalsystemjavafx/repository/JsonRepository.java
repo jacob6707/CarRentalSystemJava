@@ -54,13 +54,16 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
     }
 
     /**
-     * Loads all entities from the JSON file.
+     * Finds all cached entities.
+     * If the list wasn't updated in the last 5 minutes, it will be reloaded from the JSON file.
+     *
      * @return A list of entities.
      */
     @Override
     public List<T> findAll() {
         if (LocalDateTime.now().minusMinutes(5).isAfter(lastUpdated)) {
             entities = loadEntities();
+            lastUpdated = LocalDateTime.now();
         }
         return entities;
     }
@@ -121,6 +124,7 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
             String json = Files.readString(file);
             T[] objects = jsonb.fromJson(json, type);
             lastUpdated = LocalDateTime.now();
+            log.debug("Loaded {} entities from {}", objects.length, file);
             return new ArrayList<>(List.of(objects));
         } catch (IOException e) {
             throw new JsonParseException("Failed to read from JSON file: " + file, e);
@@ -132,6 +136,7 @@ public abstract class JsonRepository<T extends Entity> implements Repository<T> 
      */
     private void writeToFile() {
         try {
+            log.debug("Writing {} entities to {}", entities.size(), file);
             Files.writeString(file, jsonb.toJson(entities.toArray()));
         } catch (IOException e) {
             throw new JsonParseException("Failed to write to JSON file: " + file, e);

@@ -27,8 +27,8 @@
         <Region HBox.hgrow="ALWAYS" />
         <HBox alignment="CENTER_RIGHT" spacing="8.0">
          <TextField fx:id="rentalsSearchTextField" onAction="#onRentalSearchAction" promptText="Search..." />
-            <Button fx:id="rentalDeleteButton" disable="true" mnemonicParsing="false" text="Delete" />
-            <Button fx:id="rentalAddButton" disable="true" mnemonicParsing="false" text="Add" />
+            <Button fx:id="rentalDeleteButton" disable="true" onAction="#onRentalDeleteAction" mnemonicParsing="false" text="Delete" />
+            <Button fx:id="rentalAddButton" mnemonicParsing="false" onAction="#onRentalAddAction" text="Add" />
         </HBox>
     </HBox>
     <TableView fx:id="rentalsTableView" VBox.vgrow="ALWAYS">

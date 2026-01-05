@@ -113,4 +113,14 @@ public class Rental extends Entity {
         }
         return BigDecimal.ZERO;
     }
+
+    @Override
+    public String toString() {
+        return "Rental{" +
+                "customer=" + customer +
+                ", vehicle=" + vehicle +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
 }

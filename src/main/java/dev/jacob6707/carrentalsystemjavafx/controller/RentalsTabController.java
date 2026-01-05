@@ -1,5 +1,6 @@
 package dev.jacob6707.carrentalsystemjavafx.controller;
 
+import dev.jacob6707.carrentalsystemjavafx.app.CarRentalSystemJavaFXApp;
 import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
 import dev.jacob6707.carrentalsystemjavafx.repository.RentalsRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
@@ -7,11 +8,16 @@ import dev.jacob6707.carrentalsystemjavafx.util.RentalUtils;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -43,7 +49,15 @@ public class RentalsTabController {
     @FXML
     private TableView<Rental> rentalsTableView;
 
+    @FXML
+    private Button rentalDeleteButton;
+
+    @FXML
+    private Button rentalAddButton;
+
     private final RentalsRepository rentalsRepository = RentalsRepository.getInstance();
+
+    private static final Logger log = LoggerFactory.getLogger(RentalsTabController.class);
 
     /**
      * Initializes table columns and populates rental data
@@ -58,6 +72,8 @@ public class RentalsTabController {
         rentalPriceColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getPrice().doubleValue()));
 
         rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+
+        rentalsTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> rentalDeleteButton.setDisable(newValue == null));
     }
 
     /**
@@ -75,5 +91,42 @@ public class RentalsTabController {
             return;
         }
         rentalsTableView.setItems(FXCollections.observableArrayList(filteredRentals));
+    }
+
+    /**
+     * Opens the add rental view.
+     */
+    @FXML
+    void onRentalAddAction() {
+        try {
+            Stage parent = (Stage) rentalAddButton.getScene().getWindow();
+            Stage addRentalStage = new Stage();
+            Scene addRentalScene = new Scene(new FXMLLoader(CarRentalSystemJavaFXApp.class.getResource("add-rental-view.fxml")).load());
+            addRentalStage.setTitle("Add Vehicle");
+            addRentalStage.initOwner(parent);
+            addRentalStage.setScene(addRentalScene);
+            addRentalStage.showAndWait();
+            rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+        } catch (IOException e) {
+            DialogUtils.showErrorDialog("Error", "Failed to load add rental view.", "An unexpected error occurred. Please try again later.");
+            log.error("Failed to load add rental view.", e);
+        }
+    }
+
+    /**
+     * Deletes the selected rental.
+     * @param event The event that triggered this method
+     */
+    @FXML
+    void onRentalDeleteAction(ActionEvent event) {
+        if (rentalsTableView.getSelectionModel().getSelectedItem() == null) return;
+        Rental rentalToDelete = rentalsTableView.getSelectionModel().getSelectedItem();
+        DialogUtils.showConfirmationDialog("Delete Rental", "Are you sure you want to delete this rental?", "This action cannot be undone.")
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> {
+                    rentalsRepository.deleteById(rentalToDelete.getId());
+                    rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+                });
+        log.info("Rental deleted successfully: {}", rentalToDelete);
     }
 }
