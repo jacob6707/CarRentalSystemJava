@@ -7,6 +7,7 @@
         "dateOfBirth": "1995-07-22",
         "email": "emily.johnson@gmail.com",
         "firstName": "Emily",
+        "fullName": "Emily Johnson",
         "idNumber": "23978523789",
         "lastName": "Johnson",
         "location": {

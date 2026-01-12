@@ -43,8 +43,8 @@
          <TableColumn fx:id="customerDateOfBirthColumn" prefWidth="75.0" text="Date of Birth" />
          <TableColumn fx:id="customerDiscountRateColumn" prefWidth="75.0" text="Discount Rate" />
         </columns>
-        <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-        </columnResizePolicy>
+      <columnResizePolicy>
+         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+      </columnResizePolicy>
     </TableView>
 </VBox>

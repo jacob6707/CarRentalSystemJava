@@ -123,7 +123,7 @@ public class RentalsTabController {
         Rental rentalToDelete = rentalsTableView.getSelectionModel().getSelectedItem();
         DialogUtils.showConfirmationDialog("Delete Rental", "Are you sure you want to delete this rental?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> {
+                .ifPresent(_ -> {
                     rentalsRepository.deleteById(rentalToDelete.getId());
                     rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
                 });

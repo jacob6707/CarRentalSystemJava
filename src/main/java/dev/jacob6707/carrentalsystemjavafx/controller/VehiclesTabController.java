@@ -70,7 +70,7 @@ public class VehiclesTabController {
 
         vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
 
-        vehiclesTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> vehicleDeleteButton.setDisable(newValue == null));
+        vehiclesTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> vehicleDeleteButton.setDisable(newValue == null));
     }
 
     /**
@@ -99,7 +99,7 @@ public class VehiclesTabController {
         Vehicle vehicleToDelete = vehiclesTableView.getSelectionModel().getSelectedItem();
         DialogUtils.showConfirmationDialog("Delete Vehicle", "Are you sure you want to delete this vehicle?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> {
+                .ifPresent(_ -> {
                     vehiclesRepository.deleteById(vehicleToDelete.getId());
                     vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
                 });

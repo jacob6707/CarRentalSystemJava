@@ -1,5 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.model;
 
+import jakarta.json.bind.annotation.JsonbTransient;
+
 /**
  * Represents a location.
  * @param address Address line
@@ -13,6 +15,7 @@ public record Location(String address, String city, String state, String postalC
      * Gets the full address of the location.
      * @return The full address (address, postal code, city, state, country)
      */
+    @JsonbTransient
     public String getFullAddress() {
         return address + ", " + postalCode + " " + city + ", " + state + ", " + country;
     }

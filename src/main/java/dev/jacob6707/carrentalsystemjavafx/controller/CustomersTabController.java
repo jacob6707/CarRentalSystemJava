@@ -84,8 +84,8 @@ public class CustomersTabController {
         customerDiscountRateColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getDiscountRate().doubleValue()));
 
         customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
-
-        customersTableView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> customerDeleteButton.setDisable(newValue == null));
+        
+        customersTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> customerDeleteButton.setDisable(newValue == null));
 
     }
 
@@ -120,7 +120,7 @@ public class CustomersTabController {
         Customer customerToDelete = customersTableView.getSelectionModel().getSelectedItem();
         DialogUtils.showConfirmationDialog("Delete Customer", "Are you sure you want to delete this customer?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
-                .ifPresent(response -> {
+                .ifPresent(_ -> {
                     customersRepository.deleteById(customerToDelete.getId());
                     customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
                 });
