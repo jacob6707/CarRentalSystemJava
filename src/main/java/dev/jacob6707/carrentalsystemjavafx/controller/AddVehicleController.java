@@ -1,8 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.controller;
 
-import dev.jacob6707.carrentalsystemjavafx.model.vehicle.Car;
-import dev.jacob6707.carrentalsystemjavafx.model.vehicle.SUV;
-import dev.jacob6707.carrentalsystemjavafx.repository.VehiclesRepository;
+import dev.jacob6707.carrentalsystemjavafx.model.vehicle.VehicleDTO;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseVehiclesRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.VehicleUtils;
 import javafx.collections.FXCollections;
@@ -15,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 /**
  * Controller for the Add Vehicle screen.
@@ -68,29 +66,13 @@ public class AddVehicleController {
             return;
         }
 
-        switch (type) {
-            case "SUV" -> VehiclesRepository.getInstance().save(new SUV.SUVBuilder()
-                                    .id(UUID.randomUUID())
-                                    .brand(brand)
-                                    .model(model)
-                                    .licensePlate(licensePlate)
-                                    .mileage(mileage)
-                                    .year(year)
-                                    .dailyPrice(dailyPrice)
-                                    .build());
-            case "Car" -> VehiclesRepository.getInstance().save(new Car.CarBuilder()
-                            .id(UUID.randomUUID())
-                            .brand(brand)
-                            .model(model)
-                            .licensePlate(licensePlate)
-                            .mileage(mileage)
-                            .year(year)
-                            .dailyPrice(dailyPrice)
-                            .build());
-            default -> DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
-        }
+        if (!"SUV".equals(type) && !"Car".equals(type)) DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
 
-        log.info("Vehicle added successfully: {}", VehiclesRepository.getInstance().findAll().getLast());
+        VehicleDTO newVehicle = new VehicleDTO(brand, model, licensePlate, year, mileage, dailyPrice, type);
+
+        new DatabaseVehiclesRepository().save(newVehicle);
+
+        log.info("Vehicle added successfully: {}", newVehicle);
 
         Stage stage = (Stage) addVehicleButton.getScene().getWindow();
         stage.close();

@@ -2,11 +2,12 @@ package dev.jacob6707.carrentalsystemjavafx.controller;
 
 import dev.jacob6707.carrentalsystemjavafx.model.person.Customer;
 import dev.jacob6707.carrentalsystemjavafx.model.rental.Rentable;
-import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
+import dev.jacob6707.carrentalsystemjavafx.model.rental.RentalDTO;
 import dev.jacob6707.carrentalsystemjavafx.model.vehicle.Vehicle;
-import dev.jacob6707.carrentalsystemjavafx.repository.CustomersRepository;
-import dev.jacob6707.carrentalsystemjavafx.repository.RentalsRepository;
-import dev.jacob6707.carrentalsystemjavafx.repository.VehiclesRepository;
+import dev.jacob6707.carrentalsystemjavafx.model.vehicle.VehicleDTO;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseCustomersRepository;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseRentalsRepository;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseVehiclesRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.VehicleUtils;
 import javafx.collections.FXCollections;
@@ -40,9 +41,9 @@ public class AddRentalController {
     @FXML
     private ComboBox<Vehicle> vehicleComboBox;
 
-    private final RentalsRepository rentalsRepository = RentalsRepository.getInstance();
-    private final VehiclesRepository vehiclesRepository = VehiclesRepository.getInstance();
-    private final CustomersRepository customersRepository = CustomersRepository.getInstance();
+    private final DatabaseRentalsRepository rentalsRepository = new DatabaseRentalsRepository();
+    private final DatabaseVehiclesRepository vehiclesRepository = new DatabaseVehiclesRepository();
+    private final DatabaseCustomersRepository customersRepository = new DatabaseCustomersRepository();
 
     private static final Logger log = LoggerFactory.getLogger(AddRentalController.class);
 
@@ -52,7 +53,7 @@ public class AddRentalController {
     @FXML
     public void initialize() {
         customerComboBox.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
-        vehicleComboBox.setItems(FXCollections.observableArrayList(VehicleUtils.getAvailableVehicles(vehiclesRepository.findAll(), rentalsRepository.findAll())));
+        vehicleComboBox.setItems(FXCollections.observableArrayList(VehicleUtils.getAvailableVehicles(vehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList(), rentalsRepository.findAll())));
         startDatePicker.setValue(LocalDate.now());
         rentalDaysSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 9999, 0));
         rentalDaysSpinner.valueProperty().addListener((_, _, _) -> updateCostLabel());
@@ -83,7 +84,7 @@ public class AddRentalController {
             return;
         }
 
-        Rental newRental = new Rental(customer, vehicle, startDate.atTime(12, 0), startDate.atTime(12, 0).plusDays(rentalDays));
+        RentalDTO newRental = new RentalDTO(vehicle.getId(), customer.getId(), startDate.atTime(12, 0), startDate.atTime(12, 0).plusDays(rentalDays));
 
         rentalsRepository.save(newRental);
 

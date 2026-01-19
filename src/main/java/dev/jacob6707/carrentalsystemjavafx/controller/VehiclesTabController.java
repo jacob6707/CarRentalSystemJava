@@ -2,7 +2,8 @@ package dev.jacob6707.carrentalsystemjavafx.controller;
 
 import dev.jacob6707.carrentalsystemjavafx.app.CarRentalSystemJavaFXApp;
 import dev.jacob6707.carrentalsystemjavafx.model.vehicle.Vehicle;
-import dev.jacob6707.carrentalsystemjavafx.repository.VehiclesRepository;
+import dev.jacob6707.carrentalsystemjavafx.model.vehicle.VehicleDTO;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseVehiclesRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.VehicleUtils;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
@@ -53,7 +54,8 @@ public class VehiclesTabController {
     @FXML
     private TableView<Vehicle> vehiclesTableView;
 
-    private final VehiclesRepository vehiclesRepository = VehiclesRepository.getInstance();
+    private final DatabaseVehiclesRepository databaseVehiclesRepository = new DatabaseVehiclesRepository();
+
     private static final Logger log = LoggerFactory.getLogger(VehiclesTabController.class);
 
     /**
@@ -68,7 +70,7 @@ public class VehiclesTabController {
         vehicleMileageColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getMileage()));
         vehicleYearColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getYear()));
 
-        vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
+        vehiclesTableView.setItems(FXCollections.observableArrayList(databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList()));
 
         vehiclesTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> vehicleDeleteButton.setDisable(newValue == null));
     }
@@ -78,11 +80,12 @@ public class VehiclesTabController {
      */
     @FXML
     void onVehicleSearchAction() {
+        List<Vehicle> vehicles = databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList();
         if (vehiclesSearchTextField.getText().isBlank()) {
-            vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
+            vehiclesTableView.setItems(FXCollections.observableArrayList(vehicles));
             return;
         }
-        List<Vehicle> filteredVehicles = VehicleUtils.searchVehicles(vehiclesRepository.findAll(), vehiclesSearchTextField.getText());
+        List<Vehicle> filteredVehicles = VehicleUtils.searchVehicles(vehicles, vehiclesSearchTextField.getText());
         if (filteredVehicles.isEmpty()) {
             DialogUtils.showWarningDialog("Warning", "No vehicles found.", "No vehicles were found with the given search term.");
             return;
@@ -100,8 +103,8 @@ public class VehiclesTabController {
         DialogUtils.showConfirmationDialog("Delete Vehicle", "Are you sure you want to delete this vehicle?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(_ -> {
-                    vehiclesRepository.deleteById(vehicleToDelete.getId());
-                    vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
+                    databaseVehiclesRepository.deleteById(vehicleToDelete.getId());
+                    vehiclesTableView.setItems(FXCollections.observableArrayList(databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList()));
                 });
         log.info("Vehicle deleted successfully: {}", vehicleToDelete);
     }
@@ -119,7 +122,7 @@ public class VehiclesTabController {
             addVehicleStage.initOwner(parent);
             addVehicleStage.setScene(addVehicleScene);
             addVehicleStage.showAndWait();
-            vehiclesTableView.setItems(FXCollections.observableArrayList(vehiclesRepository.findAll()));
+            vehiclesTableView.setItems(FXCollections.observableArrayList(databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList()));
         } catch (IOException e) {
             DialogUtils.showErrorDialog("Error", "Failed to load add vehicle view.", "An unexpected error occurred. Please try again later.");
             log.error("Failed to load add vehicle view.", e);

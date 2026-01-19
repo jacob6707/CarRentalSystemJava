@@ -1,12 +1,9 @@
 package dev.jacob6707.carrentalsystemjavafx.util;
 
+import dev.jacob6707.carrentalsystemjavafx.model.Location;
 import dev.jacob6707.carrentalsystemjavafx.model.person.Customer;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.function.Predicate;
 
 /**
@@ -45,14 +42,8 @@ public class CustomerUtils {
     /**
      * Validates customer input fields for non‑null, blank, format
      */
-    public static boolean validateInput(String firstName, String lastName, String email, String phoneNumber, String idNumber, String location, String dateOfBirth) {
-        if (firstName == null || lastName == null || email == null || phoneNumber == null || idNumber == null || location == null || dateOfBirth == null) { return false; }
-        if (firstName.isBlank() || lastName.isBlank() || email.isBlank() || phoneNumber.isBlank() || idNumber.isBlank() || location.isBlank() || dateOfBirth.isBlank()) { return false; }
-        StringTokenizer locationTokenizer = new StringTokenizer(location, ",");
-        if (locationTokenizer.countTokens() != 4) { return false; }
-        try {
-            LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-        } catch (DateTimeParseException _) { return false; }
-        return true;
+    public static boolean validateInput(String firstName, String lastName, String email, String phoneNumber, String idNumber, Location location) {
+        if (firstName == null || lastName == null || email == null || phoneNumber == null || idNumber == null || location.address() == null || location.city() == null || location.state() == null || location.postalCode() == null || location.country() == null) { return false; }
+        return !firstName.isBlank() && !lastName.isBlank() && !email.isBlank() && !phoneNumber.isBlank() && !idNumber.isBlank() && !location.address().isBlank() && !location.city().isBlank() && !location.state().isBlank() && !location.postalCode().isBlank() && !location.country().isBlank();
     }
 }

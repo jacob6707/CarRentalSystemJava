@@ -1,5 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.model;
 
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -8,10 +10,14 @@ import java.util.UUID;
  */
 public abstract class Entity {
     private UUID id;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @DatabaseColumn("created_at")
+    private LocalDateTime createdAt;
+    @DatabaseColumn("updated_at")
+    private LocalDateTime updatedAt;
 
-    protected Entity() {}
+    protected Entity() {
+        this(UUID.randomUUID());
+    }
 
     protected Entity(UUID id) {
         this.id = id;

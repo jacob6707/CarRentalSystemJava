@@ -1,6 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.model.person;
 
 import dev.jacob6707.carrentalsystemjavafx.model.Location;
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
  */
 public class Customer extends Person {
 
+    @DatabaseColumn(value = "discount_rate")
     private BigDecimal discountRate;
 
     /**

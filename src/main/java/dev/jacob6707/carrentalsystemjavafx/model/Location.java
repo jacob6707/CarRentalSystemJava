@@ -1,5 +1,6 @@
 package dev.jacob6707.carrentalsystemjavafx.model;
 
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
 import jakarta.json.bind.annotation.JsonbTransient;
 
 /**
@@ -10,7 +11,7 @@ import jakarta.json.bind.annotation.JsonbTransient;
  * @param postalCode Postal code
  * @param country Country
  */
-public record Location(String address, String city, String state, String postalCode, String country) {
+public record Location(String address, String city, String state, @DatabaseColumn("postal_code") String postalCode, String country) {
     /**
      * Gets the full address of the location.
      * @return The full address (address, postal code, city, state, country)

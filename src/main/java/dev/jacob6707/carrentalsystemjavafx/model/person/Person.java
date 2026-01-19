@@ -2,6 +2,7 @@ package dev.jacob6707.carrentalsystemjavafx.model.person;
 
 import dev.jacob6707.carrentalsystemjavafx.model.Entity;
 import dev.jacob6707.carrentalsystemjavafx.model.Location;
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
 import jakarta.json.bind.annotation.JsonbSubtype;
 import jakarta.json.bind.annotation.JsonbTypeInfo;
 
@@ -17,12 +18,17 @@ import java.util.UUID;
         @JsonbSubtype(alias = "Employee", type=Employee.class)
 })
 public abstract class Person extends Entity {
+    @DatabaseColumn(value = "first_name")
     protected String firstName;
+    @DatabaseColumn(value = "last_name")
     protected String lastName;
     protected String email;
+    @DatabaseColumn(value = "phone_number")
     protected String phoneNumber;
+    @DatabaseColumn(value = "id_number")
     protected String idNumber;
     protected Location location;
+    @DatabaseColumn(value = "date_of_birth")
     protected LocalDate dateOfBirth;
 
     protected Person() {}

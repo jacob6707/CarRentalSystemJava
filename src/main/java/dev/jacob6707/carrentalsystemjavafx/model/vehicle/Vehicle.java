@@ -1,6 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.model.vehicle;
 
 import dev.jacob6707.carrentalsystemjavafx.model.Entity;
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
 import jakarta.json.bind.annotation.JsonbSubtype;
 import jakarta.json.bind.annotation.JsonbTypeInfo;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
         @JsonbSubtype(alias = "SUV", type=SUV.class)
 })
 public abstract non-sealed class Vehicle extends Entity implements Serviceable {
+    @DatabaseColumn("license_plate")
     protected String licensePlate;
     protected String brand;
     protected String model;

@@ -5,6 +5,7 @@ module dev.jacob6707.carrentalsystemjavafx {
     requires jakarta.json.bind;
     requires org.slf4j;
     requires java.desktop;
+    requires java.sql;
 
     exports dev.jacob6707.carrentalsystemjavafx.controller;
     opens dev.jacob6707.carrentalsystemjavafx.controller to javafx.fxml;
@@ -24,5 +25,7 @@ module dev.jacob6707.carrentalsystemjavafx {
     opens dev.jacob6707.carrentalsystemjavafx.exception to jakarta.json.bind, org.eclipse.yasson, javafx.fxml;
     exports dev.jacob6707.carrentalsystemjavafx.repository;
     opens dev.jacob6707.carrentalsystemjavafx.repository to jakarta.json.bind, org.eclipse.yasson, javafx.fxml;
+    exports dev.jacob6707.carrentalsystemjavafx.util.database;
+    opens dev.jacob6707.carrentalsystemjavafx.util.database to jakarta.json.bind, javafx.fxml, org.eclipse.yasson;
 
 }

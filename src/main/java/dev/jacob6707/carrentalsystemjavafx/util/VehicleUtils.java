@@ -1,10 +1,11 @@
 package dev.jacob6707.carrentalsystemjavafx.util;
 
-import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
+import dev.jacob6707.carrentalsystemjavafx.model.rental.RentalDTO;
 import dev.jacob6707.carrentalsystemjavafx.model.vehicle.Vehicle;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 /**
@@ -30,9 +31,9 @@ public class VehicleUtils {
      * @param rentals The list of rentals
      * @return An immutable list of available vehicles
      */
-    public static List<Vehicle> getAvailableVehicles(List<Vehicle> vehicles, List<Rental> rentals) {
-        List<Vehicle> currentlyRentedVehicles = RentalUtils.getActiveRentals(rentals).stream().map(Rental::getVehicle).toList();
-        return vehicles.stream().filter(vehicle -> !currentlyRentedVehicles.contains(vehicle)).toList();
+    public static List<Vehicle> getAvailableVehicles(List<Vehicle> vehicles, List<RentalDTO> rentals) {
+        List<UUID> currentlyRentedVehicleIDs = RentalUtils.getActiveRentals(rentals).stream().map(RentalDTO::getVehicleId).toList();
+        return vehicles.stream().filter(vehicle -> !currentlyRentedVehicleIDs.contains(vehicle.getId())).toList();
     }
 
     /**

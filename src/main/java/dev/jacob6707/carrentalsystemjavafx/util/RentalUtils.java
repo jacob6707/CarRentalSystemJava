@@ -1,6 +1,7 @@
 package dev.jacob6707.carrentalsystemjavafx.util;
 
 import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
+import dev.jacob6707.carrentalsystemjavafx.model.rental.RentalDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +28,7 @@ public class RentalUtils {
      * @param rentals The list of rentals to filter
      * @return An immutable list of active rentals
      */
-    public static List<Rental> getActiveRentals(List<Rental> rentals) {
+    public static List<RentalDTO> getActiveRentals(List<RentalDTO> rentals) {
         return rentals.stream().filter(rental -> rental.getEndDate().isAfter(LocalDateTime.now())).toList();
     }
 

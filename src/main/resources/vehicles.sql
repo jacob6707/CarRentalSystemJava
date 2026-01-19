@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+    id UUID DEFAULT RANDOM_UUID() PRIMARY KEY,
+    created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    brand VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL,
+    license_plate VARCHAR(255) NOT NULL,
+    manufacture_year INT NOT NULL,
+    mileage INT NOT NULL,
+    daily_price DECIMAL(10, 4) NOT NULL,
+    vehicle_type VARCHAR(8) NOT NULL
+);

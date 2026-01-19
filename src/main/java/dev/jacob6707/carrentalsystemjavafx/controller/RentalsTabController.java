@@ -2,7 +2,8 @@ package dev.jacob6707.carrentalsystemjavafx.controller;
 
 import dev.jacob6707.carrentalsystemjavafx.app.CarRentalSystemJavaFXApp;
 import dev.jacob6707.carrentalsystemjavafx.model.rental.Rental;
-import dev.jacob6707.carrentalsystemjavafx.repository.RentalsRepository;
+import dev.jacob6707.carrentalsystemjavafx.model.rental.RentalDTO;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseRentalsRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.RentalUtils;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -55,9 +56,11 @@ public class RentalsTabController {
     @FXML
     private Button rentalAddButton;
 
-    private final RentalsRepository rentalsRepository = RentalsRepository.getInstance();
+    private final DatabaseRentalsRepository databaseRentalsRepository = new DatabaseRentalsRepository();
 
     private static final Logger log = LoggerFactory.getLogger(RentalsTabController.class);
+
+    private List<Rental> getAllRentals() { return databaseRentalsRepository.findAll().stream().map(RentalDTO::constructFromDTO).toList(); }
 
     /**
      * Initializes table columns and populates rental data
@@ -71,7 +74,7 @@ public class RentalsTabController {
         rentalVehicleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getVehicle().toString()));
         rentalPriceColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getPrice().doubleValue()));
 
-        rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+        rentalsTableView.setItems(FXCollections.observableArrayList(getAllRentals()));
 
         rentalsTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> rentalDeleteButton.setDisable(newValue == null));
     }
@@ -81,11 +84,12 @@ public class RentalsTabController {
      */
     @FXML
     void onRentalSearchAction() {
+        List<Rental> rentals = getAllRentals();
         if (rentalsSearchTextField.getText().isBlank()) {
-            rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+            rentalsTableView.setItems(FXCollections.observableArrayList(rentals));
             return;
         }
-        List<Rental> filteredRentals = RentalUtils.searchRentals(rentalsRepository.findAll(), rentalsSearchTextField.getText());
+        List<Rental> filteredRentals = RentalUtils.searchRentals(rentals, rentalsSearchTextField.getText());
         if (filteredRentals.isEmpty()) {
             DialogUtils.showWarningDialog("Warning", "No rentals found.", "No rentals were found with the given search term.");
             return;
@@ -106,7 +110,7 @@ public class RentalsTabController {
             addRentalStage.initOwner(parent);
             addRentalStage.setScene(addRentalScene);
             addRentalStage.showAndWait();
-            rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+            rentalsTableView.setItems(FXCollections.observableArrayList(getAllRentals()));
         } catch (IOException e) {
             DialogUtils.showErrorDialog("Error", "Failed to load add rental view.", "An unexpected error occurred. Please try again later.");
             log.error("Failed to load add rental view.", e);
@@ -124,8 +128,8 @@ public class RentalsTabController {
         DialogUtils.showConfirmationDialog("Delete Rental", "Are you sure you want to delete this rental?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(_ -> {
-                    rentalsRepository.deleteById(rentalToDelete.getId());
-                    rentalsTableView.setItems(FXCollections.observableArrayList(rentalsRepository.findAll()));
+                    databaseRentalsRepository.deleteById(rentalToDelete.getId());
+                    rentalsTableView.setItems(FXCollections.observableArrayList(getAllRentals()));
                 });
         log.info("Rental deleted successfully: {}", rentalToDelete);
     }

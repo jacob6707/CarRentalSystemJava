@@ -2,20 +2,20 @@ package dev.jacob6707.carrentalsystemjavafx.controller;
 
 import dev.jacob6707.carrentalsystemjavafx.model.Location;
 import dev.jacob6707.carrentalsystemjavafx.model.person.Customer;
-import dev.jacob6707.carrentalsystemjavafx.repository.CustomersRepository;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseCustomersRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.CustomerUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.StringTokenizer;
 
 /**
  * Controller for the Add Customer screen.
@@ -26,7 +26,7 @@ public class AddCustomerController {
     private Button addCustomerButton;
 
     @FXML
-    private TextField addCustomerDateOfBirthTextField;
+    private DatePicker addCustomerDateOfBirthDatePicker;
 
     @FXML
     private TextField addCustomerEmailTextField;
@@ -41,12 +41,29 @@ public class AddCustomerController {
     private TextField addCustomerLastNameTextField;
 
     @FXML
-    private TextField addCustomerLocationTextField;
+    private TextField addCustomerAddressTextField;
+
+    @FXML
+    private TextField addCustomerCityTextField;
+
+    @FXML
+    private TextField addCustomerStateTextField;
+
+    @FXML
+    private TextField addCustomerPostalCodeTextField;
+
+    @FXML
+    private TextField addCustomerCountryTextField;
 
     @FXML
     private TextField addCustomerPhoneNumberTextField;
 
     private static final Logger log = LoggerFactory.getLogger(AddCustomerController.class);
+
+    @FXML
+    void initialize() {
+        addCustomerDateOfBirthDatePicker.setValue(LocalDate.now());
+    }
 
     /**
      * Handles customer creation; persists if input is valid.
@@ -59,16 +76,19 @@ public class AddCustomerController {
         String email = addCustomerEmailTextField.getText();
         String phoneNumber = addCustomerPhoneNumberTextField.getText();
         String idNumber = addCustomerIDNumberTextField.getText();
-        String location = addCustomerLocationTextField.getText();
-        String dateOfBirth = addCustomerDateOfBirthTextField.getText();
+        String address = addCustomerAddressTextField.getText();
+        String city = addCustomerCityTextField.getText();
+        String state = addCustomerStateTextField.getText();
+        String postalCode = addCustomerPostalCodeTextField.getText();
+        String country = addCustomerCountryTextField.getText();
+        LocalDate dateOfBirth = addCustomerDateOfBirthDatePicker.getValue();
 
-        if (!CustomerUtils.validateInput(firstName, lastName, email, phoneNumber, idNumber, location, dateOfBirth)) {
-            log.warn("Invalid input for customer creation: {}, {}, {}, {}, {}, {}, {}", firstName, lastName, email, phoneNumber, idNumber, location, dateOfBirth);
+        Location location = new Location(address,city,state,postalCode,country);
+        if (!CustomerUtils.validateInput(firstName, lastName, email, phoneNumber, idNumber, location) || dateOfBirth == null) {
+            log.warn("Invalid input for customer creation: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", firstName, lastName, email, phoneNumber, idNumber, address, city, state, postalCode, country, dateOfBirth);
             DialogUtils.showWarningDialog("Warning", "Invalid input.", "Please make sure all fields are filled correctly.");
             return;
         }
-
-        Location location1 = getLocation(location);
 
         Customer newCustomer = new Customer.CustomerBuilder()
                 .firstName(firstName)
@@ -76,31 +96,16 @@ public class AddCustomerController {
                 .email(email)
                 .phoneNumber(phoneNumber)
                 .idNumber(idNumber)
-                .location(location1)
-                .dateOfBirth(LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd.MM.yyyy")))
+                .location(location)
+                .dateOfBirth(dateOfBirth)
+                .discountRate(BigDecimal.ZERO)
                 .build();
 
-        CustomersRepository.getInstance().save(newCustomer);
+        new DatabaseCustomersRepository().save(newCustomer);
 
         log.info("Customer created: {}", newCustomer);
 
         Stage stage = (Stage) addCustomerButton.getScene().getWindow();
         stage.close();
-    }
-
-    /**
-     * Parses location string into address components
-     * @param location The location string
-     */
-    private static Location getLocation(String location) {
-        StringTokenizer locationTokenizer = new StringTokenizer(location, ",");
-        String address = locationTokenizer.nextToken().trim();
-        String cityAndPostalCode = locationTokenizer.nextToken().trim();
-        String postalCode = cityAndPostalCode.substring(0, cityAndPostalCode.indexOf(" "));
-        String city = cityAndPostalCode.substring(cityAndPostalCode.indexOf(" ") + 1);
-        String state = locationTokenizer.nextToken().trim();
-        String country = locationTokenizer.nextToken().trim();
-
-        return new Location(address, city, state, postalCode, country);
     }
 }

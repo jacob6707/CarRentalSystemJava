@@ -2,7 +2,7 @@ package dev.jacob6707.carrentalsystemjavafx.controller;
 
 import dev.jacob6707.carrentalsystemjavafx.app.CarRentalSystemJavaFXApp;
 import dev.jacob6707.carrentalsystemjavafx.model.person.Customer;
-import dev.jacob6707.carrentalsystemjavafx.repository.CustomersRepository;
+import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseCustomersRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.CustomerUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
@@ -65,7 +65,7 @@ public class CustomersTabController {
     @FXML
     private TableView<Customer> customersTableView;
 
-    private final CustomersRepository customersRepository = CustomersRepository.getInstance();
+    private final DatabaseCustomersRepository databaseCustomersRepository = new DatabaseCustomersRepository();
     private static final Logger log = LoggerFactory.getLogger(CustomersTabController.class);
 
     /**
@@ -83,7 +83,7 @@ public class CustomersTabController {
         customerDateOfBirthColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))));
         customerDiscountRateColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getDiscountRate().doubleValue()));
 
-        customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
+        customersTableView.setItems(FXCollections.observableArrayList(databaseCustomersRepository.findAll()));
         
         customersTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> customerDeleteButton.setDisable(newValue == null));
 
@@ -103,7 +103,7 @@ public class CustomersTabController {
             addCustomerStage.initOwner(parent);
             addCustomerStage.setScene(addCustomerScene);
             addCustomerStage.showAndWait();
-            customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
+            customersTableView.setItems(FXCollections.observableArrayList(databaseCustomersRepository.findAll()));
         } catch (IOException e) {
             DialogUtils.showErrorDialog("Error", "Failed to load add customer view.", "An unexpected error occurred. Please try again later.");
             log.error("Failed to load add customer view.", e);
@@ -121,8 +121,8 @@ public class CustomersTabController {
         DialogUtils.showConfirmationDialog("Delete Customer", "Are you sure you want to delete this customer?", "This action cannot be undone.")
                 .filter(response -> response == ButtonType.OK)
                 .ifPresent(_ -> {
-                    customersRepository.deleteById(customerToDelete.getId());
-                    customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
+                    databaseCustomersRepository.deleteById(customerToDelete.getId());
+                    customersTableView.setItems(FXCollections.observableArrayList(databaseCustomersRepository.findAll()));
                 });
         log.info("Customer deleted successfully: {}", customerToDelete);
     }
@@ -134,10 +134,10 @@ public class CustomersTabController {
     @FXML
     void onCustomerSearchAction(ActionEvent event) {
         if (customersSearchTextField.getText().isBlank()) {
-            customersTableView.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
+            customersTableView.setItems(FXCollections.observableArrayList(databaseCustomersRepository.findAll()));
             return;
         }
-        List<Customer> filteredCustomers = CustomerUtils.searchCustomers(customersRepository.findAll(), customersSearchTextField.getText());
+        List<Customer> filteredCustomers = CustomerUtils.searchCustomers(databaseCustomersRepository.findAll(), customersSearchTextField.getText());
         if (filteredCustomers.isEmpty()) {
             DialogUtils.showWarningDialog("Warning", "No customers found.", "No customers were found with the given search term.");
             return;

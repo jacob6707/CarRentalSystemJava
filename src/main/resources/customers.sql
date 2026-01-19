@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS customers (
+    id UUID DEFAULT RANDOM_UUID() PRIMARY KEY,
+
+    created_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(50) NOT NULL,
+    id_number VARCHAR(100) NOT NULL,
+
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    state VARCHAR(100) NOT NULL,
+    postal_code VARCHAR(20) NOT NULL,
+    country VARCHAR(100) NOT NULL,
+
+    date_of_birth DATE NOT NULL,
+    discount_rate DECIMAL(10, 4) NOT NULL DEFAULT 0
+);

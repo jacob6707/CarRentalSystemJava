@@ -2,6 +2,8 @@ package dev.jacob6707.carrentalsystemjavafx.model.vehicle;
 
 import dev.jacob6707.carrentalsystemjavafx.exception.VehicleBookingException;
 import dev.jacob6707.carrentalsystemjavafx.model.rental.Rentable;
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseColumn;
+import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseTransient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +17,9 @@ import java.util.UUID;
 public final class SUV extends Vehicle implements Rentable {
     private static final Logger log = LoggerFactory.getLogger(SUV.class);
 
+    @DatabaseColumn("daily_price")
     private BigDecimal dailyPrice;
+    @DatabaseTransient
     private Boolean available = true;
 
     public SUV() {}
