@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
@@ -26,7 +25,7 @@ public abstract class H2DBRepository<T extends Entity> implements Repository<T> 
     protected H2DBRepository(String tableName, Class<T> clazz, Path schemaFile) {
         this.tableName = tableName;
         this.clazz = clazz;
-        if (Files.exists(schemaFile) && !DatabaseUtils.tableExists(tableName)) {
+        if (/*Files.exists(schemaFile)  &&*/ !DatabaseUtils.tableExists(tableName)) {
             DatabaseUtils.createTableFromSql(schemaFile);
         }
     }

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: dev.jacob6707.carrentalsystemjavafx.app.CarRentalSystemJavaF
+ XLauncher
+

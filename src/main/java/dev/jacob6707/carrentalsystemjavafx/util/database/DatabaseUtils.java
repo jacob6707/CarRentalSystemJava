@@ -1,17 +1,18 @@
 package dev.jacob6707.carrentalsystemjavafx.util.database;
 
 import dev.jacob6707.carrentalsystemjavafx.exception.DatabaseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
+import java.io.*;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DatabaseUtils {
-    private static final String DB_PROPERTIES_LOCATION = "src/main/resources/db.properties";
+    private static final Logger log = LoggerFactory.getLogger(DatabaseUtils.class);
+    private static final String DB_PROPERTIES_PATH = "db.properties";
 
     private DatabaseUtils() {}
 
@@ -21,9 +22,9 @@ public class DatabaseUtils {
      * @throws IOException if there is an error reading the database properties file
      */
     public static Connection createConnection() throws IOException {
-        try (Reader reader = new FileReader(DB_PROPERTIES_LOCATION)) {
+        try (InputStream inputStream = DatabaseUtils.class.getClassLoader().getResourceAsStream(DB_PROPERTIES_PATH)) {
             Properties props = new Properties();
-            props.load(reader);
+            props.load(inputStream);
 
             String url = props.getProperty("jdbc_url");
             String username = props.getProperty("jdbc_username");
@@ -100,7 +101,8 @@ public class DatabaseUtils {
 
     public static boolean tableExists(String tableName) {
         try {
-            return runQuery("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?", tableName).getFirst().get("count") != null;
+            Number count = (Number) runQuery("SELECT COUNT(*) AS COUNT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?", tableName.toUpperCase()).getFirst().get("count");
+            return count.intValue() > 0;
         } catch (IOException e) {
             throw new DatabaseException("Failed to check if the table exists", e);
         }
@@ -108,7 +110,10 @@ public class DatabaseUtils {
 
     public static void createTableFromSql(Path tableSchema) {
         try {
-            String sql = Files.readString(tableSchema);
+            InputStream inputStream = DatabaseUtils.class.getClassLoader().getResourceAsStream(tableSchema.getFileName().toString());
+            if (inputStream == null) throw new FileNotFoundException("Table schema file not found");
+            String sql = new BufferedReader(new InputStreamReader(inputStream))
+                    .lines().collect(Collectors.joining("\n"));
             Connection connection = createConnection();
 
             Statement stmt = connection.createStatement();
@@ -116,6 +121,7 @@ public class DatabaseUtils {
             stmt.close();
             connection.close();
 
+            log.debug("Created table from SQL file: {}", tableSchema);
         } catch (IOException | SQLException e) {
             throw new DatabaseException("Failed to create table from SQL file", e);
         }
