@@ -2,11 +2,15 @@ package dev.jacob6707.carrentalsystemjavafx.repository;
 
 import dev.jacob6707.carrentalsystemjavafx.model.vehicle.VehicleDTO;
 import dev.jacob6707.carrentalsystemjavafx.util.database.DatabaseUtils;
+import dev.jacob6707.carrentalsystemjavafx.util.database.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public class DatabaseVehiclesRepository extends H2DBRepository<VehicleDTO> {
     private static final Logger log = LoggerFactory.getLogger(DatabaseVehiclesRepository.class);
@@ -32,5 +36,23 @@ public class DatabaseVehiclesRepository extends H2DBRepository<VehicleDTO> {
         } catch (IOException e) {
             log.error("Failed to save customer to database", e);
         }
+    }
+
+    public List<VehicleDTO> findAvailableVehicles() {
+        try {
+            List<Map<String, Object>> result = DatabaseUtils.runQuery("""
+                    SELECT v.*
+                    FROM vehicles v
+                    LEFT JOIN rentals r
+                        ON r.vehicle_id = v.id
+                       AND r.end_date >= CURRENT_DATE
+                    WHERE r.vehicle_id IS NULL
+                    """);
+            if (result.isEmpty()) return List.of();
+            return new ObjectMapper<>(VehicleDTO.class).map(result);
+        } catch (IOException | SQLException e) {
+            log.error("Failed to find available vehicles", e);
+        }
+        return List.of();
     }
 }

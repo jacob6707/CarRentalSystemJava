@@ -26,7 +26,8 @@
         </Label>
         <Region HBox.hgrow="ALWAYS" />
         <HBox alignment="CENTER_RIGHT" spacing="8.0">
-         <TextField fx:id="rentalsSearchTextField" onAction="#onRentalSearchAction" promptText="Search..." />
+            <Button text="↻" onAction="#refresh" />
+            <TextField fx:id="rentalsSearchTextField" onAction="#onRentalSearchAction" promptText="Search..." />
             <Button fx:id="rentalDeleteButton" disable="true" onAction="#onRentalDeleteAction" mnemonicParsing="false" text="Delete" />
             <Button fx:id="rentalAddButton" mnemonicParsing="false" onAction="#onRentalAddAction" text="Add" />
         </HBox>

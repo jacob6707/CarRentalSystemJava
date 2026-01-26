@@ -5,6 +5,7 @@ import dev.jacob6707.carrentalsystemjavafx.model.person.Customer;
 import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseCustomersRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.CustomerUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -83,7 +84,10 @@ public class CustomersTabController {
         customerDateOfBirthColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getDateOfBirth().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))));
         customerDiscountRateColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getDiscountRate().doubleValue()));
 
-        customersTableView.setItems(FXCollections.observableArrayList(databaseCustomersRepository.findAll()));
+        Thread.startVirtualThread(() -> {
+            List<Customer> customers = databaseCustomersRepository.findAll();
+            Platform.runLater(() -> customersTableView.setItems(FXCollections.observableArrayList(customers)));
+        });
         
         customersTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> customerDeleteButton.setDisable(newValue == null));
 
@@ -145,6 +149,14 @@ public class CustomersTabController {
         customersTableView.setItems(FXCollections.observableArrayList(filteredCustomers));
     }
 
-
+    /**
+     * Refreshes the table view with the latest data from the database.
+     */
+    public void refresh() {
+        Thread.startVirtualThread(() -> {
+            List<Customer> customers = databaseCustomersRepository.findAll();
+            Platform.runLater(() -> customersTableView.setItems(FXCollections.observableArrayList(customers)));
+        });
+    }
 }
 

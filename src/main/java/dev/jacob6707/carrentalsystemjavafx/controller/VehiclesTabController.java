@@ -6,6 +6,7 @@ import dev.jacob6707.carrentalsystemjavafx.model.vehicle.VehicleDTO;
 import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseVehiclesRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.VehicleUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -70,7 +71,10 @@ public class VehiclesTabController {
         vehicleMileageColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getMileage()));
         vehicleYearColumn.setCellValueFactory(param -> new ReadOnlyIntegerWrapper(param.getValue().getYear()));
 
-        vehiclesTableView.setItems(FXCollections.observableArrayList(databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList()));
+        Thread.startVirtualThread(() -> {
+            List<Vehicle> vehicles = databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList();
+            Platform.runLater(() -> vehiclesTableView.setItems(FXCollections.observableArrayList(vehicles)));
+        });
 
         vehiclesTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> vehicleDeleteButton.setDisable(newValue == null));
     }
@@ -127,5 +131,15 @@ public class VehiclesTabController {
             DialogUtils.showErrorDialog("Error", "Failed to load add vehicle view.", "An unexpected error occurred. Please try again later.");
             log.error("Failed to load add vehicle view.", e);
         }
+    }
+
+    /**
+     * Refreshes the table view with the latest data from the database.
+     */
+    public void refresh() {
+        Thread.startVirtualThread(() -> {
+            List<Vehicle> vehicles = databaseVehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList();
+            Platform.runLater(() -> vehiclesTableView.setItems(FXCollections.observableArrayList(vehicles)));
+        });
     }
 }

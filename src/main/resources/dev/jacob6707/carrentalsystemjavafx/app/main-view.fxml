@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="540.0" prefWidth="960.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dev.jacob6707.carrentalsystemjavafx.controller.MainController">
    <center>
-      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" fx:id="mainTabPane">
         <tabs>
-          <Tab closable="false" text="All Vehicles">
+          <Tab closable="false" text="All Vehicles" fx:id="vehicles">
                <content>
-                  <fx:include source="vehicles-tab.fxml" />
+                  <fx:include source="vehicles-tab.fxml" fx:id="vehiclesTab" />
                </content>
             </Tab>
-          <Tab closable="false" text="Customers">
+          <Tab closable="false" text="Customers" fx:id="customers">
                <content>
-                  <fx:include source="customers-tab.fxml" />
+                  <fx:include source="customers-tab.fxml" fx:id="customersTab" />
                </content></Tab>
-            <Tab text="Rentals">
+            <Tab text="Rentals" fx:id="rentals">
                <content>
-                  <fx:include source="rentals-tab.fxml" />
+                  <fx:include source="rentals-tab.fxml" fx:id="rentalsTab" />
                </content></Tab>
         </tabs>
       </TabPane>
    </center>
+   <top>
+      <fx:include source="menu-bar.fxml" fx:id="menuBar" />
+   </top>
 </BorderPane>

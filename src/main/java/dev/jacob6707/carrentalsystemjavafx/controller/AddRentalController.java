@@ -9,10 +9,12 @@ import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseCustomersRepositor
 import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseRentalsRepository;
 import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseVehiclesRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
-import dev.jacob6707.carrentalsystemjavafx.util.VehicleUtils;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +22,17 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.List;
 
+/**
+ * Controller for the Add Rental screen.
+ */
 public class AddRentalController {
+
+    @FXML
+    public VBox contentsVBox;
+    @FXML
+    public HBox loadingHBox;
 
     @FXML
     private Button addRentalButton;
@@ -52,8 +63,18 @@ public class AddRentalController {
      */
     @FXML
     public void initialize() {
-        customerComboBox.setItems(FXCollections.observableArrayList(customersRepository.findAll()));
-        vehicleComboBox.setItems(FXCollections.observableArrayList(VehicleUtils.getAvailableVehicles(vehiclesRepository.findAll().stream().map(VehicleDTO::constructFromDTO).toList(), rentalsRepository.findAll())));
+        Thread.startVirtualThread(() -> {
+            loadingHBox.setVisible(true);
+            contentsVBox.setVisible(false);
+            List<Customer> customers = customersRepository.findAll();
+            List<Vehicle> availableVehicles = vehiclesRepository.findAvailableVehicles().stream().map(VehicleDTO::constructFromDTO).toList();
+            Platform.runLater(() -> {
+                customerComboBox.setItems(FXCollections.observableArrayList(customers));
+                vehicleComboBox.setItems(FXCollections.observableArrayList(availableVehicles));
+                loadingHBox.setVisible(false);
+                contentsVBox.setVisible(true);
+            });
+        });
         startDatePicker.setValue(LocalDate.now());
         rentalDaysSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 9999, 0));
         rentalDaysSpinner.valueProperty().addListener((_, _, _) -> updateCostLabel());

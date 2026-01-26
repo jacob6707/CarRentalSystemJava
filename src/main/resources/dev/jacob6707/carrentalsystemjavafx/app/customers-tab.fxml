@@ -26,7 +26,8 @@
         </Label>
         <Region HBox.hgrow="ALWAYS" />
         <HBox alignment="CENTER_RIGHT" spacing="8.0">
-         <TextField fx:id="customersSearchTextField" onAction="#onCustomerSearchAction" promptText="Search..." />
+            <Button text="↻" onAction="#refresh" />
+            <TextField fx:id="customersSearchTextField" onAction="#onCustomerSearchAction" promptText="Search..." />
             <Button fx:id="customerDeleteButton" disable="true" mnemonicParsing="false" onAction="#onCustomerDeleteAction" text="Delete" />
             <Button fx:id="customerAddButton" mnemonicParsing="false" onAction="#onCustomerAddAction" text="Add" />
         </HBox>

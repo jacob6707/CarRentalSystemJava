@@ -6,6 +6,7 @@ import dev.jacob6707.carrentalsystemjavafx.model.rental.RentalDTO;
 import dev.jacob6707.carrentalsystemjavafx.repository.DatabaseRentalsRepository;
 import dev.jacob6707.carrentalsystemjavafx.util.DialogUtils;
 import dev.jacob6707.carrentalsystemjavafx.util.RentalUtils;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyDoubleWrapper;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -60,7 +61,7 @@ public class RentalsTabController {
 
     private static final Logger log = LoggerFactory.getLogger(RentalsTabController.class);
 
-    private List<Rental> getAllRentals() { return databaseRentalsRepository.findAll().stream().map(RentalDTO::constructFromDTO).toList(); }
+    private List<Rental> getAllRentals() { return databaseRentalsRepository.findAll().stream().filter(dto -> dto.getVehicleId() != null && dto.getCustomerId() != null).map(RentalDTO::constructFromDTO).toList(); }
 
     /**
      * Initializes table columns and populates rental data
@@ -74,7 +75,11 @@ public class RentalsTabController {
         rentalVehicleColumn.setCellValueFactory(param -> new ReadOnlyStringWrapper(param.getValue().getVehicle().toString()));
         rentalPriceColumn.setCellValueFactory(param -> new ReadOnlyDoubleWrapper(param.getValue().getPrice().doubleValue()));
 
-        rentalsTableView.setItems(FXCollections.observableArrayList(getAllRentals()));
+        Thread.startVirtualThread(() -> {
+            List<Rental> rentals = getAllRentals();
+            Platform.runLater(() -> rentalsTableView.setItems(FXCollections.observableArrayList(rentals)));
+        });
+
 
         rentalsTableView.getSelectionModel().selectedItemProperty().addListener((_, _, newValue) -> rentalDeleteButton.setDisable(newValue == null));
     }
@@ -132,5 +137,15 @@ public class RentalsTabController {
                     rentalsTableView.setItems(FXCollections.observableArrayList(getAllRentals()));
                 });
         log.info("Rental deleted successfully: {}", rentalToDelete);
+    }
+
+    /**
+     * Refreshes the table view with the latest data from the database.
+     */
+    public void refresh() {
+        Thread.startVirtualThread(() -> {
+            List<Rental> rentals = getAllRentals();
+            Platform.runLater(() -> rentalsTableView.setItems(FXCollections.observableArrayList(rentals)));
+        });
     }
 }
