@@ -1,8 +1,10 @@
 package dev.jacob6707.carrentalsystemjavafx.exception;
 
 /**
- * Checked exception that represents a problem when booking a vehicle.
- * Extends Exception to force handling at compile time.
+ * Represents an exception that occurs during vehicle booking operations.
+ * This exception is designed to provide meaningful error messages for scenarios
+ * where booking a vehicle fails or is deemed invalid. It should be used in cases
+ * where business logic determines that the booking process cannot proceed.
  */
 public class VehicleBookingException extends Exception {
     /**
